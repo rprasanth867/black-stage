@@ -1,25 +1,18 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-
+import 'reactflow/dist/style.css';
+import GraphEditor from './views/graph/GraphEditor';
+import ComponentSelector from './views/selector/ComponentSelector';
+import { App as AntApp } from 'antd';
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AntApp>
+      <div className="App" style={{display: 'flex', flexDirection:'row'}}>
+        <GraphEditor/>
+        <ComponentSelector/>
+      </div>
+    </AntApp>
   );
 }
 

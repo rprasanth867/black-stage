@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.ant-form-item-label {
+  text-align: start !important;
+}
+
+.ant-modal-confirm-content {
+  margin-inline-start: 10px !important;
+}
