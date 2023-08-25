@@ -13,6 +13,8 @@ import { NodeType } from '../../components/enum';
 import { YAMLData } from '../graph/types';
 import { App, Button } from 'antd';
 import EditNodeDialog from '../edit_node/EditNodeDialog';
+import { useDispatch } from 'react-redux';
+import { initiateEditEntity } from '../../redux/reducers/catalog';
 
 interface IProps {
     data: YAMLData,
@@ -35,20 +37,21 @@ const getIcon = (kind: Kind): ReactElement|undefined => {
 }
 function KindNode(props: IProps) {
   const {data, graph=true} =props;
-  const { modal } = App.useApp();
+  const dispatch = useDispatch();
 
   const editNode = useCallback(() => {
-    modal.confirm({
-        width: '70%',
-        icon: getIcon(data.kind),
-        title: `Edit ${data.kind}`,
-        content: <EditNodeDialog id='edit-node' data={data}/>,
-        okText: 'Save',
-        okButtonProps: {
-            form: 'edit-node',
-            htmlType: 'submit',
-        }
-    })
+    dispatch(initiateEditEntity(data?.id))
+    // modal.confirm({
+    //     width: '70%',
+    //     icon: getIcon(data.kind),
+    //     title: `Edit ${data.kind}`,
+    //     content: <EditNodeDialog id='edit-node' data={data}/>,
+    //     okText: 'Save',
+    //     okButtonProps: {
+    //         form: 'edit-node',
+    //         htmlType: 'submit',
+    //     }
+    // })
   },[data]);
 
 

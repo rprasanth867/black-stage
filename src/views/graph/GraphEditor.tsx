@@ -5,6 +5,10 @@ import CustomEdge from '../../components/Edge';
 import KindNode from '../selector/KindNode';
 import { getDefaultNodeData } from './functions';
 import { Kind } from '../selector/enums';
+import { useSelector } from 'react-redux';
+import { IReduxState } from '../../redux/store';
+import { useDispatch } from 'react-redux';
+import { setEntities, setRelations } from '../../redux/reducers/catalog';
 
 const initialNodes: Node[] = [];
 
@@ -17,16 +21,14 @@ const edgeTypes = {
 };
 
 let id = 0;
-const getId = () => `dndnode_${id++}`;
+const getId = () => `entity_${id++}`;
 
 function GraphEditor() {
-  const [nodes, setNodes] = useState<Node[]>(initialNodes);
-  const [edges, setEdges] = useState<Edge[]>(initialEdges);
+  const { entities, relations } = useSelector((state:IReduxState)=> state.catalog);
+  const dispatch = useDispatch();
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 
-  console.log('VRRRR nodes', nodes)
-  console.log('VRRRR edges', edges)
 
   const onInit = useCallback(
     (instance: ReactFlowInstance) => setReactFlowInstance(instance),
@@ -34,18 +36,21 @@ function GraphEditor() {
   );
 
   const onNodesChange = useCallback(
-    (changes: any) => setNodes((nds: Node[]) => applyNodeChanges(changes, nds)),
-    []
+    (changes: any) => {
+      dispatch(setEntities(applyNodeChanges(changes, entities)));
+    }, [entities]
   );
 
   const onEdgesChange = useCallback(
-    (changes: any) => setEdges((eds: Edge[]) => applyEdgeChanges(changes, eds)),
-    []
+    (changes: any) => {
+      dispatch(setRelations(applyEdgeChanges(changes, relations)));
+    }, [relations]
   );
 
   const onConnect = useCallback(
-    (connection: any) => setEdges((eds: Edge[]) => addEdge({...connection,type:'buttonedge'}, eds)),
-    []
+    (connection: any) => {
+      dispatch(setRelations(addEdge({...connection,type:'buttonedge'}, relations)));
+    },[relations]
   );
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
@@ -71,16 +76,21 @@ function GraphEditor() {
         y: event.clientY - (reactFlowBounds?.top || 0),
       });
 
+      const nodeId = getId();
+
       const newNode: Node = {
-        id: getId(),
+        id: nodeId,
         type,
         position,
-        data: getDefaultNodeData(kind),
+        data: {
+          ...getDefaultNodeData(kind),
+          id: nodeId
+        },
       };
 
-      setNodes((nds) => [...nds, newNode]);
+      dispatch(setEntities([...entities, newNode]));
     },
-    [reactFlowInstance]
+    [reactFlowInstance, entities]
   );
 
   return (
@@ -92,8 +102,8 @@ function GraphEditor() {
       onDrop={onDrop}
     >
       <ReactFlow
-        nodes={nodes}
-        edges={edges}
+        nodes={entities}
+        edges={relations}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onInit={onInit}

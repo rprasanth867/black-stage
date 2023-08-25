@@ -13,6 +13,7 @@ export type Metadata = {
 }
 
 export type YAMLData = {
+    id?: string;
     apiVersion: string;
     kind: Kind;
     metadata: Metadata;
