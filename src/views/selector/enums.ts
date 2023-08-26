@@ -18,6 +18,7 @@ export enum Relation {
     partOf='partOf',
     hasPart='hasPart',
     dependsOn='dependsOn',
+    dependencyOf='dependencyOf',
     providesAPI='providesAPI',
     consumesAPI='consumesAPI',
     parentOf='parentOf',

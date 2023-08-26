@@ -28,7 +28,6 @@ const catalogSlice = createSlice({
             state.entities = action.payload;
         },
         setRelations: (state, action: PayloadAction<Relation[]>) => {
-            console.log('vrrr relations', action.payload);
             state.relations = action.payload;
         },
         initiateEditEntity: (state, action: PayloadAction<string|undefined>) => {
@@ -40,7 +39,6 @@ const catalogSlice = createSlice({
         },
         updateEntity: (state, action: PayloadAction<Entity>) => {
             const entityId = action.payload.id;
-            console.log('vrrr new', action.payload);
             const idx = state.entities.findIndex((entity:Entity)=> entity.id===entityId);
             state.entities[idx]=action.payload;
             state.editEntity=undefined;

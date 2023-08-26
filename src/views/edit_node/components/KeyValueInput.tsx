@@ -42,7 +42,10 @@ const formatData = (values: {[key: string]: string}|undefined):Item[] => {
 
 const getOriginalFormat = (items: Item[]) => {
   const data:{[key: string]: string}={};
-  items.forEach((item)=> data[item.xkey]=item.value)
+  items.forEach((item,index)=> {
+    if(index!=items.length-1)
+      data[item.xkey]=item.value
+  })
   return data;
 }
 function KeyValueInput(props: IProps) {

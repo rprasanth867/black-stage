@@ -25,8 +25,6 @@ export class RelationUtil {
         const coreEntities = [Domain,System,Component,Resource,API];
         const orgEntities = [User,Group];
 
-        console.log('VRRRR',source,target)
-
         const {memberOf,hasMember,ownedBy,ownerOf,partOf,hasPart,dependsOn,providesAPI,consumesAPI,parentOf,childOf} = Relation;
         let relations =[]
         if(source.data.kind===User) {

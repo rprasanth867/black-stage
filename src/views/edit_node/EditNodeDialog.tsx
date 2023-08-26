@@ -28,7 +28,6 @@ function EditNodeDialog() {
   },[])
 
   const onSave = useCallback((values: any)=> {
-    setOpen(false);
     const newData:YAMLData = {
       id:yamlData.id,
       apiVersion: yamlData.apiVersion,
@@ -46,13 +45,11 @@ function EditNodeDialog() {
       specs: {
       }
     }
-    console.log('vrrr old', editEntity);
     if(editEntity){
       const newEntity = {...editEntity}
       newEntity.data= newData;
       dispatch(updateEntity(newEntity));
     }
-    setTimeout(()=>dispatch(cancelEditEntity()),400);
   },[])
 
   const items: CollapseProps['items'] = [
@@ -70,7 +67,7 @@ function EditNodeDialog() {
   return (
     <Drawer title={`Edit ${yamlData?.kind}`} placement="right" onClose={onClose} open={edit&&open}>
         <Form
-            onFinish={onSave}
+            onValuesChange={(changedValues, allValues)=> onSave(allValues)}
             initialValues={{
                 apiVersion: yamlData?.apiVersion,
                 name: yamlData?.metadata?.name,
@@ -95,15 +92,6 @@ function EditNodeDialog() {
                 expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
                 defaultActiveKey={['1']} />
             </div>
-            <div style={{alignSelf:'flex-end',display:'flex',gap:'10px'}}>
-                <Button size='large'>
-                    Cancel
-                </Button>
-                <Button htmlType='submit' size='large' type='primary'>
-                    Save
-                </Button>
-            </div>
-            
         </Form>
     </Drawer>
   )

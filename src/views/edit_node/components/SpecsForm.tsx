@@ -1,8 +1,18 @@
+import { Form } from 'antd';
 import React from 'react'
 
-function SpecsForm() {
+interface IProps {
+  id?: any;
+  value?: any;
+  onChange?: any;
+}
+
+function SpecsForm(props: IProps) {
+   
   return (
-    <div>SpecsForm</div>
+   <Form>
+
+   </Form>
   )
 }
 
