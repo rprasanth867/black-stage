@@ -49,7 +49,6 @@ function KeyValueInput(props: IProps) {
   const [data, setData] = useState<Item[]>(formatData(props.value))
 
   const onChange = (e:any,index:number, key:'xkey'|'value', newVal: string) => {
-    console.log('VRRR',e);
     let items:Item[] = data;
     items[index][key] = newVal;
     if(index===data.length-1) {

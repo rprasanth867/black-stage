@@ -4,13 +4,16 @@ import GraphEditor from './views/graph/GraphEditor';
 import ComponentSelector from './views/selector/ComponentSelector';
 import { App as AntApp } from 'antd';
 import EditNodeDialog from './views/edit_node/EditNodeDialog';
+import { useSelector } from 'react-redux';
+import { IReduxState } from './redux/store';
 function App() {
+  const { edit } = useSelector((state:IReduxState)=> state.catalog);
   return (
     <AntApp>
       <div className="App" style={{display: 'flex', flexDirection:'row'}}>
         <GraphEditor/>
         <ComponentSelector/>
-        <EditNodeDialog/>
+        {edit && <EditNodeDialog/>}
       </div>
     </AntApp>
   );

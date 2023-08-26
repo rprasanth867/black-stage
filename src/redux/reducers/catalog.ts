@@ -37,6 +37,7 @@ const catalogSlice = createSlice({
         },
         updateEntity: (state, action: PayloadAction<Entity>) => {
             const entityId = action.payload.id;
+            console.log('vrrr new', action.payload);
             const idx = state.entities.findIndex((entity:Entity)=> entity.id===entityId);
             state.entities[idx]=action.payload;
             state.editEntity=undefined;

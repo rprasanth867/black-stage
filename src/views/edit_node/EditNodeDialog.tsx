@@ -1,11 +1,11 @@
 import { Button, Card, Collapse, CollapseProps, Drawer, Form, Input } from 'antd'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { YAMLData } from '../graph/types'
 import { useSelector } from 'react-redux';
 import { IReduxState } from '../../redux/store';
 import { CaretRightOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
-import { cancelEditEntity } from '../../redux/reducers/catalog';
+import { cancelEditEntity, updateEntity } from '../../redux/reducers/catalog';
 import MetadataForm from './components/MetadataForm';
 import SpecsForm from './components/SpecsForm';
 
@@ -17,13 +17,42 @@ const layout = {
 function EditNodeDialog() {
 
   const { editEntity, edit } = useSelector((state:IReduxState)=> state.catalog);
+  const [open, setOpen] = useState(true);
   const yamlData = editEntity?.data as YAMLData;
   const [form] = Form.useForm();
-  console.log('VRRRR', yamlData);
   const dispatch = useDispatch();
 
   const onClose = useCallback(()=> {
-    dispatch(cancelEditEntity());
+    setOpen(false);
+    setTimeout(()=>dispatch(cancelEditEntity()),400);
+  },[])
+
+  const onSave = useCallback((values: any)=> {
+    setOpen(false);
+    const newData:YAMLData = {
+      id:yamlData.id,
+      apiVersion: yamlData.apiVersion,
+      kind: yamlData.kind,
+      metadata: {
+        name: values?.name,
+        namespace: values?.namespace,
+        title: values?.title,
+        description: values?.description,
+        labels: values?.labels,
+        annotations: values?.annotations,
+        tags: values?.tags,
+        links: values?.links
+      },
+      specs: {
+      }
+    }
+    console.log('vrrr old', editEntity);
+    if(editEntity){
+      const newEntity = {...editEntity}
+      newEntity.data= newData;
+      dispatch(updateEntity(newEntity));
+    }
+    setTimeout(()=>dispatch(cancelEditEntity()),400);
   },[])
 
   const items: CollapseProps['items'] = [
@@ -39,17 +68,19 @@ function EditNodeDialog() {
     }
     ]
   return (
-    <Drawer title={`Edit ${yamlData?.kind}`} placement="right" onClose={onClose} open={edit}>
+    <Drawer title={`Edit ${yamlData?.kind}`} placement="right" onClose={onClose} open={edit&&open}>
         <Form
-            onFinish={(values)=>console.log('VRRRR val',values)}
+            onFinish={onSave}
             initialValues={{
                 apiVersion: yamlData?.apiVersion,
                 name: yamlData?.metadata?.name,
                 title: yamlData?.metadata?.title,
-                labels: {
-                    "key1" : "value1",
-                    "key2" : "value2"
-                  }
+                namespace: yamlData?.metadata?.namespace,
+                description: yamlData?.metadata?.description,
+                labels: yamlData?.metadata?.labels,
+                annotations: yamlData?.metadata?.annotations,
+                tags: yamlData?.metadata?.tags,
+                links: yamlData?.metadata?.links
             }}
             {...layout}
             style={{display:'flex',flexDirection:'column',height:'100%'}}>

@@ -17,9 +17,6 @@ interface IProps {
 function Links(props: IProps) {
   const { id, onChange, value=[]} = props;
   const {modal} = App.useApp();
-
-  console.log('VRRR', value);
-
   
   const onAdd = (item:Link) => {
     if(onChange) {
