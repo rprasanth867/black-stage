@@ -7,6 +7,7 @@ import { CaretRightOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { cancelEditEntity } from '../../redux/reducers/catalog';
 import MetadataForm from './components/MetadataForm';
+import SpecsForm from './components/SpecsForm';
 
 
 const layout = {
@@ -34,7 +35,7 @@ function EditNodeDialog() {
     {
         key: '2',
         label: 'Specs',
-        children: <span>No content</span>,
+        children: <SpecsForm/>,
     }
     ]
   return (
@@ -52,13 +53,13 @@ function EditNodeDialog() {
             }}
             {...layout}
             style={{display:'flex',flexDirection:'column',height:'100%'}}>
-            <div style={{flex:1}}>
+            <div style={{flex:1,overflowY:'auto'}}>
                 <Form.Item name={'apiVersion'} label='API Version'>
                     <Input/>
                 </Form.Item>
                 <Collapse
-                style={{marginLeft:'-10px'}}
-                bordered={false}
+                style={{borderRadius:'0px', borderRight:'none'}}
+                // bordered={false}
                 items={items}
                 expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
                 defaultActiveKey={['1']} />

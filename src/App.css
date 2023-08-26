@@ -44,3 +44,58 @@
 .ant-modal-confirm-content {
   margin-inline-start: 10px !important;
 }
+
+.ant-table-body {
+  overflow: auto !important;
+}
+
+.ant-table th,
+.ant-table-row td  {
+  padding: 8px !important;
+}
+
+.ant-drawer-body{
+  padding: 0px !important;
+}
+
+.ant-collapse-header{
+  padding: 6px 2px !important;
+}
+
+
+/* For WebKit Browsers */
+/* These styles will be applied to Chrome, Safari, and other WebKit-based browsers */
+::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #acacac; /* Color of the scrollbar thumb */
+  border-radius: 5px; /* Radius of the scrollbar thumb corners */
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background-color: white; /* Color of the scrollbar track */
+}
+
+/* For Mozilla Browsers */
+/* These styles will be applied to Firefox and other Mozilla-based browsers */
+/* Note that as of my last update in September 2021, Firefox had limited support for custom scrollbars */
+/* These styles might need to be adjusted based on browser updates */
+
+/* The following selectors are used for Mozilla scrollbars */
+/* Since these selectors don't have standardized names, they might change in the future */
+
+/* Track */
+html {
+  scrollbar-width: thin; /* Width of the scrollbar track */
+  scrollbar-color: #f0f0f0 #888; /* Color of the scrollbar track and thumb */
+}
+
+/* Thumb */
+html::-moz-scrollbar-thumb {
+  background-color: #888; /* Color of the scrollbar thumb */
+  border-radius: 5px; /* Radius of the scrollbar thumb corners */
+}
+
