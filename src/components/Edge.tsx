@@ -1,6 +1,7 @@
 import { Select } from "antd";
 import { ReactElement } from "react";
 import { BaseEdge, EdgeLabelRenderer, EdgeProps, getBezierPath } from "reactflow";
+import { RelationUtil } from "utils/RelationUtil";
 const onEdgeClick = (evt:any, id:any) => {
     evt.stopPropagation();
     alert(`remove ${id}`);
@@ -16,6 +17,8 @@ function Edge(props: IEdge) {
         sourceY,
         targetX,
         targetY,
+        source,
+        target,
         sourcePosition,
         targetPosition,
         style = {},
@@ -32,7 +35,12 @@ function Edge(props: IEdge) {
 
     const handleChange = (value: string) => {
         console.log(`selected ${value}`);
-    }  
+    } 
+
+    
+    
+    const ops =  RelationUtil.getPossibleRelations(source,target)
+    const options = [ops.map(op => ({value:op,label:op}))]
     return (
       <>
         <BaseEdge path={edgePath} markerEnd={markerEnd} style={style} />
@@ -50,18 +58,9 @@ function Edge(props: IEdge) {
           >
             <Select
                 style={{minWidth: '125px'}}
-                defaultValue="ownerOf"
-                // size="small"
+                defaultValue={ops[0]}
                 onChange={handleChange}
-                options={[
-                    { value: 'ownerOf', label: 'ownerOf' },
-                    { value: 'consumesApi', label: 'consumesApi' },
-                    { value: 'apiProvidedBy', label: 'apiProvidedBy' },
-                    { value: 'hasPart', label: 'hasPart' },
-                    { value: 'parentOf', label: 'parentOf' },
-                    { value: 'hasMember', label: 'hasMember' },
-                    { value: 'dependsOn', label: 'dependsOn' }
-                ]}
+                options={options}
                 />
           </div>
         </EdgeLabelRenderer>

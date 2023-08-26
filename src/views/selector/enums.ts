@@ -9,3 +9,17 @@ export enum Kind {
     Domain = 'Domain',
     Location = 'Location' 
 }
+
+export enum Relation {
+    memberOf='memberOf',
+    hasMember='hasMember',
+    ownerOf='ownerOf',
+    ownedBy='ownedBy',
+    partOf='partOf',
+    hasPart='hasPart',
+    dependsOn='dependsOn',
+    providesAPI='providesAPI',
+    consumesAPI='consumesAPI',
+    parentOf='parentOf',
+    childOf='childOf'
+}

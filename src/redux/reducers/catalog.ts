@@ -1,8 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { Edge, Node } from 'reactflow'
+import { YAMLData } from 'views/graph/types';
 
-type Entity = Node;
+
+type Entity = Node<YAMLData>
 type Relation = Edge;
 export interface Catalog {
     entities: Entity[];
@@ -26,6 +28,7 @@ const catalogSlice = createSlice({
             state.entities = action.payload;
         },
         setRelations: (state, action: PayloadAction<Relation[]>) => {
+            console.log('vrrr relations', action.payload);
             state.relations = action.payload;
         },
         initiateEditEntity: (state, action: PayloadAction<string|undefined>) => {
