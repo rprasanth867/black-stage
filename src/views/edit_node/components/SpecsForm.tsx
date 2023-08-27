@@ -102,11 +102,11 @@ function SpecsForm(props: IProps) {
                 name = { 'dependsOn' }>
                 <Select mode = 'multiple' />
             </Form.Item>}
-            {isVisible('definition') && <Form.Item
+            {/* {isVisible('definition') && <Form.Item
                 label = 'Definition'
                 name = { 'definition' }>
                 <Input.TextArea />
-            </Form.Item>}
+            </Form.Item>} */}
             {isVisible('parent') && <Form.Item
                 label = 'Parent'
                 name = { 'parent' }>
