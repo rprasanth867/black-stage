@@ -1,9 +1,8 @@
-import { Button, Form, Input, Table } from 'antd';
-import Item from 'antd/es/list/Item';
+import { Button, Input, Table } from 'antd';
 import Column from 'antd/es/table/Column';
-import React, { ChangeEventHandler, useCallback, useState } from 'react';
+import { useState } from 'react';
 import { MdDelete } from 'react-icons/md';
-interface Item {
+interface ItemType {
     id: number;
     value: string;
     xkey: string;
@@ -15,8 +14,8 @@ interface IProps {
   value?: { [key: string]: string; };
 }
 
-const formatData = (values: { [key: string]: string; } | undefined): Item[] => {
-    const data: Item[] = [];
+const formatData = (values: { [key: string]: string; } | undefined): ItemType[] => {
+    const data: ItemType[] = [];
     let idx = 0;
 
     for (const key in values) {
@@ -43,11 +42,11 @@ const formatData = (values: { [key: string]: string; } | undefined): Item[] => {
     return data;
 };
 
-const getOriginalFormat = (items: Item[]) => {
+const getOriginalFormat = (items: ItemType[]) => {
     const data: { [key: string]: string; } = {};
 
     items.forEach((item, index) => {
-        if (index != items.length - 1) {
+        if (index !== items.length - 1) {
             data[item.xkey] = item.value;
         }
     });
@@ -56,10 +55,10 @@ const getOriginalFormat = (items: Item[]) => {
 };
 
 function KeyValueInput(props: IProps) {
-    const [ data, setData ] = useState<Item[]>(formatData(props.value));
+    const [ data, setData ] = useState<ItemType[]>(formatData(props.value));
 
     const onChange = (e: any, index: number, key: 'xkey' | 'value', newVal: string) => {
-        const items: Item[] = data;
+        const items: ItemType[] = data;
 
         items[index][key] = newVal;
         if (index === data.length - 1) {
@@ -78,7 +77,7 @@ function KeyValueInput(props: IProps) {
     };
 
     const onDelete = (index: number) => {
-        const items: Item[] = data;
+        const items: ItemType[] = data;
 
         items.splice(index, 1);
         setData([ ...items ]);
@@ -98,7 +97,7 @@ function KeyValueInput(props: IProps) {
             <Column
                 dataIndex = { 'xkey' }
                 key = { 'xkey' }
-                render = { (text, record: Item, index) =>
+                render = { (text, record: ItemType, index) =>
                     (<Input
                         onChange = { e => onChange(e, index, 'xkey', e.target.value) }
                         value = { text } />)
@@ -107,7 +106,7 @@ function KeyValueInput(props: IProps) {
             <Column
                 dataIndex = { 'value' }
                 key = { 'value' }
-                render = { (text, record: Item, index) =>
+                render = { (text, record: ItemType, index) =>
                     (<Input
                         onChange = { e => onChange(e, index, 'value', e.target.value) }
                         value = { text } />)
@@ -115,7 +114,7 @@ function KeyValueInput(props: IProps) {
                 title = 'Value' />
 
             <Column
-                render = { (text, record: Item, index) => {
+                render = { (text, record: ItemType, index) => {
                     const isDisabled = index === data.length - 1;
 
                     return (

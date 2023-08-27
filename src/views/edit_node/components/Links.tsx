@@ -58,7 +58,9 @@ function Links(props: IProps) {
             title: 'Add Link',
             content: (<AddLinkDialog
                 link = { item }
-                onFinish = { values => newItem ? onAdd(values): onUpdate(values,index)} />),
+                // eslint-disable-next-line no-extra-parens
+                onFinish = { values => (newItem ? onAdd(values) : onUpdate(values, index)) } />),
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
             onOk: () => new Promise(() => {}),
             okButtonProps: {
                 htmlType: 'submit',
@@ -110,11 +112,12 @@ function Links(props: IProps) {
                 style = {{ display: 'flex',
                     flexWrap: 'wrap',
                     gap: '4px' }}>
-                {value?.map((value, index) =>
+                {value?.map((val, index) =>
                     (<Popover
                         content = { <LinkControl
                             index = { index }
-                            link = { value } /> }>
+                            link = { val } /> }
+                        key = { index }>
                         <div
                             style = {{
                                 display: 'flex',
@@ -127,14 +130,14 @@ function Links(props: IProps) {
                                 borderRadius: '8px',
                                 padding: '4px'
                             }}>
-                            {value.icon && <Icon
-                                component = { icons[value.icon] }
+                            {val.icon && <Icon
+                                component = { icons[val.icon] }
                                 style = {{ fontSize: '25px',
                                     color: '#faad14' }} />}
                             <div
                                 style = {{ whiteSpace: 'nowrap',
                                     overflow: 'hidden',
-                                    textOverflow: 'ellipsis' }}> {value.title || value.url}</div>
+                                    textOverflow: 'ellipsis' }}> {val.title || val.url}</div>
                         </div>
                     </Popover>))}
 

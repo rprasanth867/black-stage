@@ -32,6 +32,7 @@ function useGraph() {
         const entity = { ...data.entity };
 
         if (entity.kind === Kind.Location || entity.kind === Kind.Domain) {
+            // eslint-disable-next-line no-continue
             continue;
         }
         entity.id = data.id;

@@ -1,5 +1,4 @@
 import { AutoComplete, Form, Select } from 'antd';
-import { Kind } from 'utils/contants';
 import { KindType, Spec } from 'views/graph/types';
 
 interface IProps {
@@ -48,6 +47,9 @@ interface IProps {
 //     }
 // };
 
+const knownLifeCycles = [ { value: 'experimental' }, { value: 'production' }, { value: 'deprecated' } ];
+const knownTypes = [ { value: 'service' }, { value: 'website' }, { value: 'library' } ];
+
 function SpecsForm(props: IProps) {
     const { id } = props;
 
@@ -56,12 +58,12 @@ function SpecsForm(props: IProps) {
             <Form.Item
                 label = 'Type'
                 name = { 'type' }>
-                <AutoComplete options = { [ { value: 'service' }, { value: 'website' }, { value: 'library' } ] } />
+                <AutoComplete options = { knownTypes } />
             </Form.Item>
             <Form.Item
                 label = 'Lifecycle'
                 name = { 'lifecycle' }>
-                <AutoComplete options = { [ { value: 'experimental' }, { value: 'production' }, { value: 'deprecated' } ] } />
+                <AutoComplete options = { knownLifeCycles } />
             </Form.Item>
             <Form.Item
                 label = 'Owner'

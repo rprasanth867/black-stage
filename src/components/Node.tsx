@@ -1,4 +1,3 @@
-import { ReactElement } from 'react';
 import { Handle, Position } from 'reactflow';
 
 interface INode {

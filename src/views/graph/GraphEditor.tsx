@@ -1,7 +1,17 @@
 import ELK from 'elkjs/lib/elk.bundled.js';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ReactFlow, { Background, Controls, Edge, Node, ReactFlowInstance, addEdge, applyEdgeChanges, applyNodeChanges, useReactFlow } from 'reactflow';
+import ReactFlow, {
+    Background,
+    Controls,
+    Edge,
+    Node,
+    ReactFlowInstance,
+    addEdge,
+    applyEdgeChanges,
+    applyNodeChanges,
+    useReactFlow
+} from 'reactflow';
 
 import CustomEdge from '../../components/Edge';
 import { setEntities, setRelations } from '../../redux/reducers/catalog';
@@ -11,10 +21,6 @@ import KindNode from '../selector/KindNode';
 import { getDefaultNodeData } from './functions';
 import useGraph from './useGraph';
 
-
-const initialNodes: Node[] = [];
-
-const initialEdges: Edge[] = [];
 
 const nodeTypes = { kind: KindNode };
 
@@ -75,10 +81,15 @@ const useLayoutedElements = () => {
 
 
 function GraphEditor() {
-    const { entities: allEntities, relations: allRelations, kindFilter } = useSelector((state: IReduxState) => state.catalog);
+    const {
+        entities: allEntities,
+        relations: allRelations,
+        kindFilter
+    } = useSelector((state: IReduxState) => state.catalog);
     const entities = allEntities.filter(entity => kindFilter.includes(entity.data.kind));
     const entIds = entities.map(entity => entity.id);
-    const relations = allRelations.filter(relation => entIds.includes(relation.source) && entIds.includes(relation.target));
+    const relations = allRelations
+    .filter(relation => entIds.includes(relation.source) && entIds.includes(relation.target));
     const dispatch = useDispatch();
     const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
     const [ reactFlowInstance, setReactFlowInstance ] = useState<ReactFlowInstance | null>(null);

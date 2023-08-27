@@ -21,7 +21,6 @@ function EditNodeDialog() {
     const { editEntity, edit } = useSelector((state: IReduxState) => state.catalog);
     const [ open, setOpen ] = useState(true);
     const yamlData = editEntity?.data as YAMLData;
-    const [ form ] = Form.useForm();
     const dispatch = useDispatch();
 
     const onClose = useCallback(() => {
@@ -101,13 +100,11 @@ function EditNodeDialog() {
                         <Input />
                     </Form.Item>
                     <Collapse
-                        style = {{ borderRadius: '0px',
-                            borderRight: 'none' }}
-
-                        // bordered={false}
                         defaultActiveKey = { [ '1' ] }
                         expandIcon = { ({ isActive }) => <CaretRightOutlined rotate = { isActive ? 90 : 0 } /> }
-                        items = { items } />
+                        items = { items }
+                        style = {{ borderRadius: '0px',
+                            borderRight: 'none' }} />
                 </div>
             </Form>
         </Drawer>

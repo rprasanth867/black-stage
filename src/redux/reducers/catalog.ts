@@ -54,6 +54,13 @@ const catalogSlice = createSlice({
     }
 });
 
-export const { setEntities, setRelations, setKindFilter, initiateEditEntity, cancelEditEntity, updateEntity } = catalogSlice.actions;
+export const {
+    setEntities,
+    setRelations,
+    setKindFilter,
+    initiateEditEntity,
+    cancelEditEntity,
+    updateEntity
+} = catalogSlice.actions;
 
 export default catalogSlice.reducer;
