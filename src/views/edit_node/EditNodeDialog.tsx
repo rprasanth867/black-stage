@@ -30,20 +30,12 @@ function EditNodeDialog() {
 
 
     const onSave = useCallback((values: any) => {
+        console.log('VRRRR', values);
         const newData: YAMLData = {
             id: yamlData.id,
             apiVersion: yamlData.apiVersion,
             kind: yamlData.kind,
-            metadata: {
-                name: values?.name,
-                namespace: values?.namespace,
-                title: values?.title,
-                description: values?.description,
-                labels: values?.labels,
-                annotations: values?.annotations,
-                tags: values?.tags,
-                links: values?.links
-            },
+            metadata: values.metadata,
             spec: { }
         };
 
@@ -59,14 +51,20 @@ function EditNodeDialog() {
         {
             key: '1',
             label: 'Metadata',
-            children: <MetadataForm />
+            children: (<Form.Item
+                name = { 'metadata' }
+                noStyle = { true }>
+                <MetadataForm />
+            </Form.Item>)
         },
         {
             key: '2',
             label: 'Spec',
-            children: <Form.Item name = { 'spec' }>
+            children: (<Form.Item
+                name = { 'spec' }
+                noStyle = { true }>
                 <SpecsForm kind = { yamlData.kind } />
-            </Form.Item>
+            </Form.Item>)
         }
     ];
 
@@ -79,14 +77,7 @@ function EditNodeDialog() {
             <Form
                 initialValues = {{
                     apiVersion: yamlData?.apiVersion,
-                    name: yamlData?.metadata?.name,
-                    title: yamlData?.metadata?.title,
-                    namespace: yamlData?.metadata?.namespace,
-                    description: yamlData?.metadata?.description,
-                    labels: yamlData?.metadata?.labels,
-                    annotations: yamlData?.metadata?.annotations,
-                    tags: yamlData?.metadata?.tags,
-                    links: yamlData?.metadata?.links,
+                    metadata: yamlData.metadata,
                     spec: yamlData.spec
                 }}
                 onValuesChange = { (changedValues, allValues) => onSave(allValues) }

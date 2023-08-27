@@ -1,14 +1,37 @@
 import { Form, Input } from 'antd';
 import { metaDataRules } from 'utils/rules';
+import { Metadata } from 'views/graph/types';
 
 import CustomSelector from './CustomSelector';
 import KeyValueInput from './KeyValueInput';
 import Links from './Links';
 
+interface IProps {
+    id?: string;
+    onChange?: (value: Metadata) => void;
+    value?: Metadata;
+}
 
-function MetadataForm() {
+const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 }
+};
+
+function MetadataForm(props: IProps) {
+    const { id, value = {}, onChange } = props;
+
+    const handleValuesChanges = (changed: any, values: any) => {
+        if (onChange) {
+            onChange(values);
+        }
+    };
+
     return (
-        <>
+        <Form
+            id = { id }
+            initialValues = {{ ...value }}
+            onValuesChange = { handleValuesChanges }
+            { ...layout }>
             <Form.Item
                 label = 'Name Space'
                 name = 'namespace'
@@ -62,7 +85,7 @@ function MetadataForm() {
                 rules = { metaDataRules.links }>
                 <Links />
             </Form.Item>
-        </>
+        </Form>
 
     );
 }

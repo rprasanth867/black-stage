@@ -1,4 +1,4 @@
-import { AutoComplete, Form, Input, Select } from 'antd';
+import { AutoComplete, Form, Select } from 'antd';
 import { getSupportedSpecs } from 'utils/rules';
 import { KindType, Spec } from 'views/graph/types';
 
@@ -8,6 +8,11 @@ interface IProps {
   onChange?: (values: Spec) => void;
   value?: Spec;
 }
+
+const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 20 }
+};
 
 // const specsInfo = {
 //     [Kind.Component]: {
@@ -61,7 +66,8 @@ function SpecsForm(props: IProps) {
     return (
         <Form
             id = { id }
-            initialValues = {{ ...value }}>
+            initialValues = {{ ...value }}
+            { ...layout }>
             {isVisible('type') && <Form.Item
                 label = 'Type'
                 name = { 'type' }>
