@@ -1,4 +1,5 @@
-import { AutoComplete, Form, Select } from 'antd';
+import { AutoComplete, Form, Input, Select } from 'antd';
+import { getSupportedSpecs } from 'utils/rules';
 import { KindType, Spec } from 'views/graph/types';
 
 interface IProps {
@@ -51,55 +52,91 @@ const knownLifeCycles = [ { value: 'experimental' }, { value: 'production' }, { 
 const knownTypes = [ { value: 'service' }, { value: 'website' }, { value: 'library' } ];
 
 function SpecsForm(props: IProps) {
-    const { id } = props;
+    const { id, kind, value = {} } = props;
+
+    const supportedSpecs = getSupportedSpecs(kind);
+    const isVisible = (name: string) => supportedSpecs?.includes(name);
+
 
     return (
-        <Form id = { id }>
-            <Form.Item
+        <Form
+            id = { id }
+            initialValues = {{ ...value }}>
+            {isVisible('type') && <Form.Item
                 label = 'Type'
                 name = { 'type' }>
                 <AutoComplete options = { knownTypes } />
-            </Form.Item>
-            <Form.Item
+            </Form.Item>}
+            {isVisible('lifecycle') && <Form.Item
                 label = 'Lifecycle'
                 name = { 'lifecycle' }>
                 <AutoComplete options = { knownLifeCycles } />
-            </Form.Item>
-            <Form.Item
+            </Form.Item>}
+            {isVisible('owner') && <Form.Item
                 label = 'Owner'
                 name = { 'owner' }>
                 <Select />
-            </Form.Item>
-            <Form.Item
+            </Form.Item>}
+            {isVisible('System') && <Form.Item
                 label = 'System'
                 name = { 'system' }>
                 <Select />
-            </Form.Item>
-            <Form.Item
+            </Form.Item>}
+            {isVisible('subcomponentOf') && <Form.Item
                 label = 'Sub Component Of'
                 name = { 'subcomponentOf' }>
                 <Select />
-            </Form.Item>
-            <Form.Item
+            </Form.Item>}
+            {isVisible('providesApis') && <Form.Item
                 label = 'Provides Apis'
                 name = { 'providesApis' }>
-                <Select />
-            </Form.Item>
-            <Form.Item
+                <Select mode = 'multiple' />
+            </Form.Item>}
+            {isVisible('consumesApis') && <Form.Item
                 label = 'Consumes Apis'
                 name = { 'consumesApis' }>
-                <Select />
-            </Form.Item>
-            <Form.Item
+                <Select mode = 'multiple' />
+            </Form.Item>}
+            {isVisible('dependsOn') && <Form.Item
                 label = 'Depends On'
                 name = { 'dependsOn' }>
-                <Select />
-            </Form.Item>
-            <Form.Item
+                <Select mode = 'multiple' />
+            </Form.Item>}
+            {isVisible('definition') && <Form.Item
                 label = 'Definition'
                 name = { 'definition' }>
+                <Input.TextArea />
+            </Form.Item>}
+            {isVisible('parent') && <Form.Item
+                label = 'Parent'
+                name = { 'parent' }>
                 <Select />
-            </Form.Item>
+            </Form.Item>}
+            {isVisible('children') && <Form.Item
+                label = 'Children'
+                name = { 'children' }>
+                <Select mode = 'multiple' />
+            </Form.Item>}
+            {isVisible('members') && <Form.Item
+                label = 'Members'
+                name = { 'members' }>
+                <Select mode = 'multiple' />
+            </Form.Item>}
+            {isVisible('memberOf') && <Form.Item
+                label = 'Member Of'
+                name = { 'memberOf' }>
+                <Select mode = 'multiple' />
+            </Form.Item>}
+            {isVisible('dependencyOf') && <Form.Item
+                label = 'Dependency Of'
+                name = { 'dependencyOf' }>
+                <Select mode = 'multiple' />
+            </Form.Item>}
+            {isVisible('domain') && <Form.Item
+                label = 'Domain'
+                name = { 'domain' }>
+                <Select mode = 'multiple' />
+            </Form.Item>}
         </Form>
     );
 }

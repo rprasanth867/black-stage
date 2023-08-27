@@ -1,3 +1,7 @@
+import { KindType } from 'views/graph/types';
+
+import { Kind } from './contants';
+
 const validateString = (rule: any, value: any, callback: any) => {
     // Regular expression pattern to match the given criteria
     const pattern = /^[a-zA-Z0-9]+([-_.]?[a-zA-Z0-9]+)*$/;
@@ -27,13 +31,26 @@ export const metaDataRules = {
     links: []
 };
 
-const yamlRules = {
-    apiVersion: [
-        { required: true,
-            message: 'apiVersion is required' }
-    ],
-    metadata: [
-        { required: true,
-            message: 'apiVersion is required' }
-    ]
+export const getSupportedSpecs = (kind: KindType) => {
+    switch (kind) {
+    case Kind.Component: return [ 'type', 'lifecycle', 'owner', 'system', 'subcomponentOf',
+        'providesApis', 'consumesApis', 'dependsOn' ];
+    case Kind.API: return [ 'type', 'lifecycle', 'owner', 'system', 'definition' ];
+    case Kind.Resource: return [ 'owner', 'type', 'system', 'dependsOn', 'dependencyOf' ];
+    case Kind.System: return [ 'owner', 'domain' ];
+    case Kind.Domain: return [ 'owner' ];
+    case Kind.Group: return [ 'type', 'profile', 'parent', 'children', 'members' ];
+    case Kind.User: return [ 'profile', 'memberOf' ];
+    }
 };
+
+// const yamlRules = {
+//     apiVersion: [
+//         { required: true,
+//             message: 'apiVersion is required' }
+//     ],
+//     metadata: [
+//         { required: true,
+//             message: 'apiVersion is required' }
+//     ]
+// };

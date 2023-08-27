@@ -11,6 +11,7 @@ function Edge(props: IEdge) {
         targetY,
         source,
         target,
+        label,
         sourcePosition,
         targetPosition,
         style = {},
@@ -31,10 +32,10 @@ function Edge(props: IEdge) {
 
 
     const ops = RelationUtil.getPossibleRelations(source, target);
-    const options = [ ops.map(op => {
+    const options = ops.map(op => {
         return { value: op,
             label: op };
-    }) ];
+    });
 
     return (
         <>
@@ -54,11 +55,23 @@ function Edge(props: IEdge) {
                         // if you have an interactive element, set pointer-events: all
                         pointerEvents: 'all'
                     }}>
-                    <Select
-                        defaultValue = { ops[0] }
+                    { ops.length > 1 ? <Select
+                        defaultValue = { label as string || ops[0] }
                         onChange = { handleChange }
                         options = { options }
-                        style = {{ minWidth: '125px' }} />
+                        size = 'small'
+                        style = {{ borderRadius: '10px' }} />
+                        : <span
+                            // eslint-disable-next-line indent
+                                style = {{
+                                border: '1px solid #d9d9d9',
+                                backgroundColor: 'white',
+                                padding: '4px',
+                                borderRadius: '10px' }}>
+                            {ops[0]}
+                        </span>
+                    }
+
                 </div>
             </EdgeLabelRenderer>
         </>

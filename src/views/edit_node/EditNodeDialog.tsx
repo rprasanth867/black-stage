@@ -28,6 +28,7 @@ function EditNodeDialog() {
         setTimeout(() => dispatch(cancelEditEntity()), 400);
     }, []);
 
+
     const onSave = useCallback((values: any) => {
         const newData: YAMLData = {
             id: yamlData.id,
@@ -43,8 +44,7 @@ function EditNodeDialog() {
                 tags: values?.tags,
                 links: values?.links
             },
-            spec: {
-            }
+            spec: { }
         };
 
         if (editEntity) {
@@ -64,7 +64,9 @@ function EditNodeDialog() {
         {
             key: '2',
             label: 'Spec',
-            children: <SpecsForm kind = { yamlData.kind } />
+            children: <Form.Item name = { 'spec' }>
+                <SpecsForm kind = { yamlData.kind } />
+            </Form.Item>
         }
     ];
 
@@ -84,7 +86,8 @@ function EditNodeDialog() {
                     labels: yamlData?.metadata?.labels,
                     annotations: yamlData?.metadata?.annotations,
                     tags: yamlData?.metadata?.tags,
-                    links: yamlData?.metadata?.links
+                    links: yamlData?.metadata?.links,
+                    spec: yamlData.spec
                 }}
                 onValuesChange = { (changedValues, allValues) => onSave(allValues) }
                 { ...layout }
@@ -96,11 +99,12 @@ function EditNodeDialog() {
                         overflowY: 'auto' }}>
                     <Form.Item
                         label = 'API Version'
-                        name = { 'apiVersion' }>
+                        name = { 'apiVersion' }
+                        style = {{ margin: '12px' }}>
                         <Input />
                     </Form.Item>
                     <Collapse
-                        defaultActiveKey = { [ '1' ] }
+                        defaultActiveKey = { [ '1', '2' ] }
                         expandIcon = { ({ isActive }) => <CaretRightOutlined rotate = { isActive ? 90 : 0 } /> }
                         items = { items }
                         style = {{ borderRadius: '0px',

@@ -11,8 +11,6 @@ export type Spec = {
     apiConsumedBy?: string[];
     children?: string[];
     consumesApis?: string[];
-
-    // doubt
     definition?: any;
     dependencyOf?: string[];
     dependsOn?: string[];

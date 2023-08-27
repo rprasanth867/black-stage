@@ -45,8 +45,8 @@ const useLayoutedElements = () => {
 
     const defaultOptions: Record<string, any> = {
         'elk.algorithm': 'layered',
-        'elk.layered.spacing.nodeNodeBetweenLayers': 100,
-        'elk.spacing.nodeNode': 80
+        'elk.layered.spacing.nodeNodeBetweenLayers': 300,
+        'elk.spacing.nodeNode': 120
     };
 
     const getLayoutedElements = useCallback((options: Record<string, any>) => {
@@ -124,6 +124,7 @@ function GraphEditor() {
                 const newEdge: Edge = {
                     id: `${rel.source}:${rel.target}`,
                     source: rel.source,
+                    label: rel.value,
                     target: rel.target,
                     type: 'buttonedge'
                 };
