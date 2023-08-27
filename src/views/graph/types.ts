@@ -1,59 +1,63 @@
-import { type } from "os";
-import { Kind } from "../selector/enums";
+import { Kind } from 'utils/contants';
 
 export type Link = {
-    url: string,
-    title?: string,
-    icon?: string,
-    type?: string
-}
+    icon?: string;
+    title?: string;
+    type?: string;
+    url: string;
+};
 
 export type Spec = {
-    type?: string,
-    lifecycle?: string,
-    owner?: string,
-    system?: string,
-    subcomponentOf?: string,
-    apiConsumedBy?: string[],
-    providesApis?: string[],
-    consumesApis?: string[],
-    dependsOn?: string[],
-    dependencyOf?: string[],
-    parameters?: string,//doubt
-    steps?: string,//doubt
-    definition?: any,
+    apiConsumedBy?: string[];
+    children?: string[];
+    consumesApis?: string[];
+
+    // doubt
+    definition?: any;
+    dependencyOf?: string[];
+    dependsOn?: string[];
+    domain?: string;
+    lifecycle?: string;
+    memberOf?: string[];
+    members?: string[];
+    owner?: string;
+    parameters?: string;
+    parent?: string;
+    presence?: string;
     profile?: {
-        displayName?: string,
-        email?: string,
-        picture?: string
-    },
-    parent?: string,
-    children?: string[],
-    members?: string[],
-    memberOf?: string[],
-    domain?: string,
-    target?: string,
-    targets?: string[],
-    presence?: string
-}
+        displayName?: string;
+        email?: string;
+        picture?: string;
+    };
+
+    providesApis?: string[];
+
+    // doubt
+    steps?: string;
+    subcomponentOf?: string;
+    system?: string;
+    target?: string;
+    targets?: string[];
+    type?: string;
+};
 
 export type Metadata = {
+    annotations?: { [key: string]: string; };
+    description?: string;
+    labels?: { [key: string]: string; };
+    links?: Link[];
     name: string;
     namespace?: string;
-    uid?: string;
-    title?: string;
-    description?: string;
-    labels?: {[key: string]: string};
-    annotations?: {[key: string]: string};
     tags?: string[];
-    links?: Link[];
-}
+    title?: string;
+    uid?: string;
+};
 
 export type KindType = typeof Kind[keyof typeof Kind];
 export type YAMLData = {
-    id?: string;
     apiVersion: string;
+    id?: string;
     kind: KindType;
     metadata: Metadata;
     spec: Spec;
-}
+};

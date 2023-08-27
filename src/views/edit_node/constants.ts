@@ -1,3 +1,10 @@
+import { IconType } from 'react-icons';
+import {
+    FaGithub
+} from 'react-icons/fa';
+import {
+    IoMdDocument
+} from 'react-icons/io';
 import {
     MdBrokenImage,
     MdChat,
@@ -10,19 +17,11 @@ import {
     MdPerson,
     MdSearch,
     MdSubject,
-    MdWarning,
+    MdWarning
 } from 'react-icons/md';
 
-import {
-    IoMdDocument
-} from 'react-icons/io';
 
-import {
-    FaGithub
-} from 'react-icons/fa';
-import { IconType } from 'react-icons';
-
-export const icons:{[key: string]: IconType} = {
+export const icons: { [key: string]: IconType; } = {
     brokenImage: MdBrokenImage,
     catalog: MdMenuBook,
     scaffolder: MdCreateNewFolder,
@@ -35,6 +34,7 @@ export const icons:{[key: string]: IconType} = {
     github: FaGithub,
     group: MdPeople,
     help: MdHelp,
+
     // 'kind:api': MuiExtensionIcon as IconComponent,
     // 'kind:component': MuiMemoryIcon as IconComponent,
     // 'kind:domain': MuiApartmentIcon as IconComponent,
@@ -44,5 +44,5 @@ export const icons:{[key: string]: IconType} = {
     // 'kind:user': MuiPersonIcon as IconComponent,
     // 'kind:resource': MuiWorkIcon as IconComponent,
     user: MdPerson,
-    warning: MdWarning,
-  };
+    warning: MdWarning
+};

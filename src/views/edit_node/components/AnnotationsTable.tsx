@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 
 function AnnotationsTable() {
-  return (
-    <div>AnnotationsTable</div>
-  )
+    return (
+        <div>AnnotationsTable</div>
+    );
 }
 
-export default AnnotationsTable
+export default AnnotationsTable;

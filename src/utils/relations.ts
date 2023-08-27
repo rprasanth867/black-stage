@@ -29,9 +29,9 @@
 //     RELATION_PART_OF,
 //     RELATION_PROVIDES_API,
 //   } from '@backstage/catalog-model';
-  
+
 //   export type RelationPairs = [string, string][];
-  
+
 //   export const ALL_RELATION_PAIRS: RelationPairs = [
 //     [RELATION_OWNER_OF, RELATION_OWNED_BY],
 //     [RELATION_CONSUMES_API, RELATION_API_CONSUMED_BY],
@@ -41,6 +41,6 @@
 //     [RELATION_HAS_MEMBER, RELATION_MEMBER_OF],
 //     [RELATION_DEPENDS_ON, RELATION_DEPENDENCY_OF],
 //   ];
-  
 
-export {}
+
+export {};

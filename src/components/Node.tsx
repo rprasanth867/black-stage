@@ -1,36 +1,38 @@
-import { ReactElement } from 'react'
-import { Handle, Position } from 'reactflow'
+import { ReactElement } from 'react';
+import { Handle, Position } from 'reactflow';
 
 interface INode {
-    kind: string,
-    type: string,
-    children: any,
-    graph: boolean,
-    color?: string,
+    children: any;
+    color?: string;
+    graph: boolean;
+    kind: string;
 }
 function Node(props: INode) {
-  const {children, graph,type, kind, color} = props;
-  const onDragStart = (event: any) => {
-    if(!graph) {
-        event.dataTransfer.setData('node:type', type);
-        event.dataTransfer.setData('node:kind', kind);
-        event.dataTransfer.effectAllowed = 'move';
-    }
-  };
-  return (
-    <div
-    onDragStart={ onDragStart}
-    draggable={!graph}>
-        { graph && <Handle style={color ? {backgroundColor:color}:{}} type="target" position={Position.Left} isConnectable={true} />}
-        {children}
-        {graph && <Handle
-        style={color ? {backgroundColor:color}:{}}
-        type="source"
-        position={Position.Right}
-        isConnectable={true}
-      />}
-    </div>
-  )
+    const { children, graph, kind, color } = props;
+    const onDragStart = (event: any) => {
+        if (!graph) {
+            event.dataTransfer.setData('node:kind', kind);
+            event.dataTransfer.effectAllowed = 'move';
+        }
+    };
+
+    return (
+        <div
+            draggable = { !graph }
+            onDragStart = { onDragStart }>
+            { graph && <Handle
+                isConnectable = { true }
+                position = { Position.Left }
+                style = { color ? { backgroundColor: color } : {} }
+                type = 'target' />}
+            {children}
+            {graph && <Handle
+                isConnectable = { true }
+                position = { Position.Right }
+                style = { color ? { backgroundColor: color } : {} }
+                type = 'source' />}
+        </div>
+    );
 }
 
-export default Node
+export default Node;
