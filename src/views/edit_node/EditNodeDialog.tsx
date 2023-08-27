@@ -42,7 +42,7 @@ function EditNodeDialog() {
         tags: values?.tags,
         links: values?.links
       },
-      specs: {
+      spec: {
       }
     }
     if(editEntity){
@@ -60,8 +60,8 @@ function EditNodeDialog() {
     },
     {
         key: '2',
-        label: 'Specs',
-        children: <SpecsForm/>,
+        label: 'Spec',
+        children: <SpecsForm kind={yamlData.kind}/>,
     }
     ]
   return (

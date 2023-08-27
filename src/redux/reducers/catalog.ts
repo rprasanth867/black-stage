@@ -41,7 +41,6 @@ const catalogSlice = createSlice({
             const entityId = action.payload.id;
             const idx = state.entities.findIndex((entity:Entity)=> entity.id===entityId);
             state.entities[idx]=action.payload;
-            state.editEntity=undefined;
         },
 
     },

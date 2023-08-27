@@ -66,7 +66,7 @@ function GraphEditor() {
 
       const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
       const type = event.dataTransfer.getData('node:type');
-      const kind: Kind = event.dataTransfer.getData('node:kind') as Kind;
+      const kind = event.dataTransfer.getData('node:kind');
       if (!type) {
         return;
       }

@@ -10,7 +10,7 @@ import { BiLogoCodepen } from 'react-icons/bi';
 import { GrSystem } from 'react-icons/gr';
 import Node from '../../components/Node';
 import { NodeType } from '../../components/enum';
-import { YAMLData } from '../graph/types';
+import { KindType, YAMLData } from '../graph/types';
 import { Button } from 'antd';
 import { useDispatch } from 'react-redux';
 import { initiateEditEntity } from '../../redux/reducers/catalog';
@@ -20,7 +20,7 @@ interface IProps {
     graph?: boolean
 }
 
-const getIcon = (kind: Kind): ReactElement|undefined => {
+const getIcon = (kind: KindType): ReactElement|undefined => {
     switch(kind) {
         case Kind.Component: return <Icon component={BiSolidComponent}/>
         case Kind.Template: return <Icon component={HiTemplate}/>
@@ -35,7 +35,7 @@ const getIcon = (kind: Kind): ReactElement|undefined => {
 
 }
 
-const getColor = (kind: Kind): string => {
+const getColor = (kind: KindType): string => {
   switch(kind) {
       case Kind.Component: return '#1677FF';
       case Kind.Template: return '#faad14'
@@ -46,6 +46,7 @@ const getColor = (kind: Kind): string => {
       case Kind.Location: return '#faad14'
       case Kind.Domain: return '#1677FF'
       case Kind.System: return '#1677FF'
+      default: return '#1677FF'
   }
 
 }

@@ -1,7 +1,6 @@
-import { Kind } from "../selector/enums";
-import { YAMLData } from "./types";
+import { KindType, YAMLData } from "./types";
 
-export function getDefaultNodeData(kind: Kind): YAMLData {
+export function getDefaultNodeData(kind: KindType): YAMLData {
     return {
         apiVersion: 'default',
         kind: kind,
@@ -9,7 +8,7 @@ export function getDefaultNodeData(kind: Kind): YAMLData {
             name: `new-${kind}`, 
             title: `New ${kind}`, 
         },
-        specs: {
+        spec: {
 
         }
     }

@@ -14,21 +14,26 @@ export type Spec = {
     owner?: string,
     system?: string,
     subcomponentOf?: string,
+    apiConsumedBy?: string[],
     providesApis?: string[],
     consumesApis?: string[],
     dependsOn?: string[],
     dependencyOf?: string,
-    parameters?: any,
-    steps?: any,
+    parameters?: string,//doubt
+    steps?: string,//doubt
     definition?: any,
-    profile?: any,
-    parent?: any,
-    children?: any,
-    members?: any,
-    memberOf?: any,
+    profile?: {
+        displayName?: string,
+        email?: string,
+        picture?: string
+    },
+    parent?: string,
+    children?: string[],
+    members?: string,
+    memberOf?: string[],
     domain?: string,
     target?: string,
-    targets?: string,
+    targets?: string[],
     presence?: string
 }
 
@@ -44,10 +49,11 @@ export type Metadata = {
     links?: Link[];
 }
 
+export type KindType = typeof Kind[keyof typeof Kind];
 export type YAMLData = {
     id?: string;
     apiVersion: string;
-    kind: Kind;
+    kind: KindType;
     metadata: Metadata;
-    specs: any;
+    spec: Spec;
 }

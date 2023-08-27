@@ -2,17 +2,17 @@ import { Card, Space } from 'antd'
 import React from 'react'
 import KindNode from './KindNode'
 import { Kind } from './enums'
-import { YAMLData } from '../graph/types'
+import { KindType, YAMLData } from '../graph/types'
 
 function ComponentSelector() {
-  const getDefaultData = (kind: Kind): YAMLData => {
+  const getDefaultData = (kind: KindType): YAMLData => {
       return {
         apiVersion: 'default',
         kind: kind,
         metadata: {
             name: kind, 
         },
-        specs: {
+        spec: {
             
         }
       }
