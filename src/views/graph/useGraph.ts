@@ -25,7 +25,11 @@ function useGraph() {
    let entities=[]
    let relations: IRelation[]=[]
    for(const data of fullData) {
-      const entity = data.entity;
+      const entity = {...data.entity};
+
+      if(entity.kind===Kind.Location||entity.kind===Kind.Domain) {
+         continue;
+      }
       entity.id=data.id;
       entities.push(entity);
       if(entity.kind === Kind.Component) {
@@ -97,9 +101,47 @@ function useGraph() {
             }
          }
       } else if(entity.kind===Kind.Resource) {
-         
+         const {owner,system,dependsOn,dependencyOf} = entity.spec;
+
+         if(owner) {
+            relations.push({source: entity.id,target: getID(owner),value: Relation.ownedBy
+            });
+         }
+
+         if(dependsOn) {
+            for(const ent of dependsOn) {
+               relations.push({source: entity.id,target: getID(ent), value: Relation.dependsOn});
+            }  
+         }
+
+         if(system) {
+            relations.push({source: getID(system),target: entity.id,value: Relation.hasPart})
+         }
+
+         if(dependencyOf) {
+            for(const main of dependencyOf) {
+               relations.push({source: getID(main),target: entity.id, value: Relation.dependsOn});
+            } 
+         }
+
+      } else if(entity.kind===Kind.System) {
+         const {domain,owner} = entity.spec;
+         if(owner) {
+            relations.push({source: entity.id,target: getID(owner),value: Relation.ownedBy
+            });
+         }
+         if(domain) {
+            relations.push({source: getID(domain),target: entity.id,value: Relation.hasPart})
+         }
+      } else if(entity.kind===Kind.Domain) {
+         const {owner} = entity.spec;
+         if(owner) {
+            relations.push({source: entity.id,target: getID(owner),value: Relation.ownedBy
+            });
+         }
       }
    }
+   return {entities, relations};
 }
 
 export default useGraph

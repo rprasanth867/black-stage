@@ -45,8 +45,10 @@ export class RelationUtil {
             }
         } else if(coreEntities.includes(source.data.kind) && orgEntities.includes(target.data.kind)) {
             relations.push(ownedBy)
-        } else if(source.data.kind===System && target.data.kind===Domain) {
-            relations.push(partOf)
+        } else if(source.data.kind===System) {
+            if([Component,Resource,API].includes(target.data.kind)) {
+                relations.push(hasPart)
+            }
         } else if (source.data.kind===Resource && target.data.kind===System) {
             relations.push(partOf)
         } else if(source.data.kind===Component) {

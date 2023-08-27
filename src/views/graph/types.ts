@@ -18,7 +18,7 @@ export type Spec = {
     providesApis?: string[],
     consumesApis?: string[],
     dependsOn?: string[],
-    dependencyOf?: string,
+    dependencyOf?: string[],
     parameters?: string,//doubt
     steps?: string,//doubt
     definition?: any,
@@ -29,7 +29,7 @@ export type Spec = {
     },
     parent?: string,
     children?: string[],
-    members?: string,
+    members?: string[],
     memberOf?: string[],
     domain?: string,
     target?: string,

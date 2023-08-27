@@ -74,7 +74,7 @@ function KindNode(props: IProps) {
             gap:'10px',
             color: nodeColor}}>
             {getIcon(data?.kind)}
-            {data.metadata.title ?? data.metadata.name}
+            {data.metadata?.title ?? data.metadata.name}
             {graph && <Button type='text' icon={<FaEdit/>} onClick={editNode}/>}
         </div>
     </Node>

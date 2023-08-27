@@ -1,3 +1,4 @@
+import { Kind } from "views/selector/enums";
 import { KindType, YAMLData } from "./types";
 
 export function getDefaultNodeData(kind: KindType): YAMLData {
@@ -12,4 +13,8 @@ export function getDefaultNodeData(kind: KindType): YAMLData {
 
         }
     }
+}
+
+export function getAllKinds() {
+    return [Kind.API,Kind.Component,Kind.Resource,Kind.Domain,Kind.System,Kind.Group,Kind.User]
 }
