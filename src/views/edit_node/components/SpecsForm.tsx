@@ -145,7 +145,7 @@ function SpecsForm(props: IProps) {
                 name = { 'owner' }>
                 <Select options = { allOwners } />
             </Form.Item>}
-            {isVisible('System') && <Form.Item
+            {isVisible('system') && <Form.Item
                 label = 'System'
                 name = { 'system' }>
                 <Select options = { allSystems } />

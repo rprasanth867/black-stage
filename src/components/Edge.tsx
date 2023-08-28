@@ -33,7 +33,7 @@ function Edge(props: IEdge) {
     };
 
 
-    const ops = useSelector((state: IReduxState) => getPossibleRelations(state, source, target));
+    const { relations: ops } = useSelector((state: IReduxState) => getPossibleRelations(state, source, target));
     const options = ops.map(op => {
         return { value: op,
             label: op };

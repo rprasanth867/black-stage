@@ -8,11 +8,15 @@ export function getDefaultNodeData(kind: KindType, id: string): YAMLData {
     return {
         apiVersion: 'default',
         id,
-        path: '',
+        path: `default/${id.replace('/', '_')}.yaml`,
         kind,
         metadata: {
-            name: `new-${kind}`,
-            title: `New ${kind}`
+            name: id.split('/')[1]
+
+            // title: `New ${kind}`
+        },
+        spec: {
+
         }
     };
 }
@@ -21,7 +25,8 @@ export function getAllKinds() {
     return [ Kind.API, Kind.Component, Kind.Resource, Kind.Domain, Kind.System, Kind.Group, Kind.User ];
 }
 
-export function getPossibleRelations(state: IReduxState, sourceID: string, targetId: string): string[] {
+export function getPossibleRelations(state: IReduxState, sourceID: string,
+        targetId: string): { relations: string[]; source: EntityType | undefined; target: EntityType | undefined; } {
     const { entities } = state.catalog;
     let source, target;
 
@@ -37,7 +42,9 @@ export function getPossibleRelations(state: IReduxState, sourceID: string, targe
         }
     }
     if (!source || !target) {
-        return [];
+        return { relations: [],
+            source,
+            target };
     }
 
     const { User, Group, Domain, System, Component, Resource, API } = Kind;
@@ -45,7 +52,7 @@ export function getPossibleRelations(state: IReduxState, sourceID: string, targe
     const orgEntities = [ User, Group ];
 
     const {
-        memberOf,
+        // memberOf,
         hasMember,
         ownedBy,
         ownerOf,
@@ -54,21 +61,22 @@ export function getPossibleRelations(state: IReduxState, sourceID: string, targe
         dependsOn,
         providesAPI,
         consumesAPI,
-        parentOf,
-        childOf
+        parentOf
+
+        // childOf
     } = Relation;
     const relations = [];
 
     if (source.data.kind === User) {
-        if (target.data.kind === Group) {
-            relations.push(memberOf);
-        } else {
-            relations.push(ownerOf);
-        }
+        // if (target.data.kind === Group) {
+        //     relations.push(memberOf);
+        // } else {
+        relations.push(ownerOf);
+
+        // }
     } else if (source.data.kind === Group) {
         if (target.data.kind === Group) {
             relations.push(parentOf);
-            relations.push(childOf);
         } else if (target.data.kind === User) {
             relations.push(hasMember);
         } else {
@@ -79,6 +87,9 @@ export function getPossibleRelations(state: IReduxState, sourceID: string, targe
     } else if (source.data.kind === System) {
         if ([ Component, Resource, API ].includes(target.data.kind)) {
             relations.push(hasPart);
+        }
+        if (target.data.kind === Domain) {
+            relations.push(partOf);
         }
     } else if (source.data.kind === Resource && target.data.kind === System) {
         relations.push(partOf);
@@ -95,18 +106,29 @@ export function getPossibleRelations(state: IReduxState, sourceID: string, targe
         if (target.data.kind === System) {
             relations.push(partOf);
         }
+    } else if (source.data.kind === Domain) {
+        if (target.data.kind === System) {
+            relations.push(hasPart);
+        }
     }
 
 
-    return relations;
+    return { relations,
+        source,
+        target };
 }
 
-function getID(data: YAMLData) {
+function getID(entity: EntityType) {
+    const { data } = entity;
+
     if (data.metadata.namespace) {
         return `${data.metadata.namespace}/${data.metadata.name}`;
     }
 
     return data.metadata.name;
+}
+function getIDWithKind(entity: EntityType) {
+    return `${entity.data.kind.toLocaleLowerCase()}:${entity.id}`;
 }
 
 export function getAllOwners(state: IReduxState): string[] {
@@ -117,7 +139,7 @@ export function getAllOwners(state: IReduxState): string[] {
         const kind = entity.data.kind;
 
         if (kind === Kind.Group || kind === Kind.User) {
-            res.push(`${kind.toLowerCase()}:${entity.id}`);
+            res.push(getIDWithKind(entity));
         }
     }
 
@@ -130,7 +152,7 @@ export function getAllSystems(state: IReduxState): string[] {
 
     for (const entity of entities) {
         if (entity.data.kind === Kind.System) {
-            res.push(getID(entity.data));
+            res.push(getID(entity));
         }
     }
 
@@ -144,7 +166,7 @@ export function getAllComponents(state: IReduxState): string[] {
 
     for (const entity of entities) {
         if (entity.data.kind === Kind.Component) {
-            res.push(getID(entity.data));
+            res.push(getID(entity));
         }
     }
 
@@ -159,7 +181,7 @@ export function getAllAPIs(state: IReduxState): string[] {
 
     for (const entity of entities) {
         if (entity.data.kind === Kind.API) {
-            res.push(getID(entity.data));
+            res.push(getID(entity));
         }
     }
 
@@ -174,7 +196,7 @@ export function getAllPossibleDependencies(state: IReduxState): string[] {
         const kind = entity.data.kind;
 
         if (kind === Kind.Resource || kind === Kind.Component) {
-            res.push(`${kind.toLowerCase()}:${entity.id}`);
+            res.push(getIDWithKind(entity));
         }
     }
 
@@ -187,7 +209,7 @@ export function getAllGroups(state: IReduxState): string[] {
 
     for (const entity of entities) {
         if (entity.data.kind === Kind.Group) {
-            res.push(getID(entity.data));
+            res.push(getID(entity));
         }
     }
 
@@ -200,7 +222,7 @@ export function getAllUsers(state: IReduxState): string[] {
 
     for (const entity of entities) {
         if (entity.data.kind === Kind.User) {
-            res.push(getID(entity.data));
+            res.push(getID(entity));
         }
     }
 
@@ -213,7 +235,7 @@ export function getAllDomains(state: IReduxState): string[] {
 
     for (const entity of entities) {
         if (entity.data.kind === Kind.Domain) {
-            res.push(getID(entity.data));
+            res.push(getID(entity));
         }
     }
 
@@ -378,5 +400,101 @@ export function getUpdatedRelations(entities: EntityType[]): RelationType[] {
     }
 
     return relations;
+
+}
+
+type UpdatedEntities = { source: EntityType; target: EntityType; };
+
+export function getUpdatedEntites(relation: RelationType, src: EntityType, tar: EntityType): UpdatedEntities {
+    const source: EntityType = JSON.parse(JSON.stringify(src));
+    const target: EntityType = JSON.parse(JSON.stringify(tar));
+
+    console.log('VRRRR kjbh', source, target);
+
+    // target.data.spec = {};
+
+    const value = relation.label;
+
+    switch (value) {
+    case Relation.ownerOf:{
+        target.data.spec.owner = getIDWithKind(source);
+        break;
+    }
+    case Relation.ownedBy: {
+        source.data.spec.owner = getIDWithKind(target);
+        break;
+    }
+    case Relation.partOf: {
+        if (target.data.kind === Kind.System) {
+            // src comp and target system
+            source.data.spec.system = getID(target);
+        } else if (source.data.kind === Kind.Component && target.data.kind === Kind.Component) {
+            // both src and target are components
+            source.data.spec.subcomponentOf = getID(target);
+        } else if (target.data.kind === Kind.Domain && source.data.kind === Kind.System) {
+            source.data.spec.domain = getID(target);
+        }
+
+        break;
+    }
+    case Relation.hasPart: {
+        if (source.data.kind === Kind.System) {
+            // src comp and target system
+            target.data.spec.system = getID(source);
+        }
+
+        if (source.data.kind === Kind.Domain && target.data.kind === Kind.System) {
+            target.data.spec.domain = getID(source);
+        }
+        break;
+    }
+    case Relation.providesAPI: {
+        if (!source.data.spec.providesApis) {
+            source.data.spec.providesApis = [];
+        }
+        source.data.spec.providesApis.push(getID(target));
+        break;
+    }
+    case Relation.consumesAPI: {
+        if (!source.data.spec.consumesApis) {
+            source.data.spec.consumesApis = [];
+        }
+        source.data.spec.consumesApis.push(getID(target));
+        break;
+    }
+    case Relation.dependsOn: {
+        if (!source.data.spec.dependsOn) {
+            source.data.spec.dependsOn = [];
+        }
+        source.data.spec.dependsOn.push(getIDWithKind(target));
+        break;
+    }
+    case Relation.parentOf: {
+        if (source.data.kind === Kind.Group && target.data.kind === Kind.Group) {
+            if (!source.data.spec.children) {
+                source.data.spec.children = [];
+            }
+            source.data.spec.children.push(getID(target));
+            target.data.spec.parent = getID(source);
+        }
+        break;
+    }
+    case Relation.hasMember: {
+        if (source.data.kind === Kind.Group && target.data.kind === Kind.User) {
+            if (!source.data.spec.members) {
+                source.data.spec.members = [];
+            }
+            if (!target.data.spec.memberOf) {
+                target.data.spec.memberOf = [];
+            }
+            source.data.spec.members.push(getID(target));
+            target.data.spec.memberOf.push(getID(source));
+        }
+    }
+    }
+
+
+    return { source,
+        target };
 
 }

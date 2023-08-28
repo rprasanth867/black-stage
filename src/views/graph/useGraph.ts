@@ -45,7 +45,7 @@ function useGraph(fullData: any) {
     for (const data of fullData) {
         const entity = { ...data.entity };
 
-        if (entity.kind === Kind.Location || entity.kind === Kind.Domain) {
+        if (entity.kind === Kind.Location || entity.kind === Kind.Template) {
             // eslint-disable-next-line no-continue
             continue;
         }

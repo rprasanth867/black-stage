@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ReactFlow, {
     Background,
+    Connection,
     Controls,
     Edge,
     Node,
@@ -13,10 +14,10 @@ import ReactFlow, {
     useReactFlow
 } from 'reactflow';
 import { getEntitites } from 'service/catalog';
-import { getDefaultNodeData } from 'utils/graph_util';
+import { getDefaultNodeData, getPossibleRelations, getUpdatedEntites } from 'utils/graph_util';
 
 import CustomEdge from '../../components/Edge';
-import { setEntities, setRelations } from '../../redux/reducers/catalog';
+import { setEntities, setRelations, updateEntity } from '../../redux/reducers/catalog';
 import { IReduxState } from '../../redux/store';
 import KindNode from '../selector/KindNode';
 
@@ -29,8 +30,7 @@ const edgeTypes = {
     buttonedge: CustomEdge
 };
 
-let id = 0;
-const getId = () => `entity_${id++}`;
+const getId = (kind: string) => `default/${kind.toLowerCase()}_${new Date().getTime()}`;
 
 // layouting
 const elk = new ELK();
@@ -166,14 +166,35 @@ function GraphEditor() {
 
     const onEdgesChange = useCallback(
     (changes: any) => {
+        console.log('vrrrr onedge changes', changes);
         dispatch(setRelations(applyEdgeChanges(changes, allRelations)));
     }, [ allRelations ]
     );
 
     const onConnect = useCallback(
-    (connection: any) => {
-        dispatch(setRelations(addEdge({ ...connection,
-            type: 'buttonedge' }, allRelations)));
+    (connection: Connection) => {
+        console.log('vrrrr onConnect', connection);
+        const { relations: rel, source: oldSource, target: oldTarget }
+        = getPossibleRelations(window.APP.store.getState(), connection.source ?? '',
+            connection.target ?? '');
+        const edge: any = {
+            ...connection,
+            label: rel.length > 0 ? rel[0] : '',
+            type: 'buttonedge'
+        };
+
+        if (rel.length > 0 && oldSource && oldTarget) {
+            const { source: newSource, target: newTarget } = getUpdatedEntites(edge, oldSource, oldTarget);
+
+            console.log(newSource, newTarget);
+
+            dispatch(updateEntity(newSource));
+            dispatch(updateEntity(newTarget));
+        }
+
+        console.log('VRRR new rel', rel);
+
+        dispatch(setRelations(addEdge(edge, allRelations)));
     }, [ allRelations ]
     );
 
@@ -198,7 +219,7 @@ function GraphEditor() {
             y: event.clientY - (reactFlowBounds?.top || 0)
         });
 
-        const nodeId = getId();
+        const nodeId = getId(kind);
 
         const newNode: Node = {
             id: nodeId,

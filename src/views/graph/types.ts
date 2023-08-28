@@ -58,5 +58,5 @@ export type YAMLData = {
     kind: KindType;
     metadata: Metadata;
     path: string;
-    spec?: Spec;
+    spec: Spec;
 };

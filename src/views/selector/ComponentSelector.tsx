@@ -19,6 +19,9 @@ function ComponentSelector() {
             kind,
             metadata: {
                 name: kind
+            },
+            spec: {
+
             }
         };
     };

@@ -79,7 +79,8 @@ function EditNodeDialog() {
             placement = 'right'
             title = { `Edit ${yamlData?.kind}` }>
             <Form
-                initialValues = {{ ...yamlData }}
+                initialValues = {{ ...yamlData,
+                    path: yamlData.path.replace('.yaml', '') }}
                 onFinish = { onSave }
                 { ...layout }
                 style = {{ display: 'flex',
