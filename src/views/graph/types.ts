@@ -54,8 +54,9 @@ export type Metadata = {
 export type KindType = typeof Kind[keyof typeof Kind];
 export type YAMLData = {
     apiVersion: string;
-    id?: string;
+    id: string;
     kind: KindType;
     metadata: Metadata;
-    spec: Spec;
+    path: string;
+    spec?: Spec;
 };

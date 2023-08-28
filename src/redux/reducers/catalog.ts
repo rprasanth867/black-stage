@@ -1,12 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { Edge, Node } from 'reactflow';
+import { putEntity } from 'service/catalog';
 import { getAllKinds } from 'utils/graph_util';
 import { YAMLData } from 'views/graph/types';
 
 
-type Entity = Node<YAMLData>;
-type Relation = Edge;
+export type Entity = Node<YAMLData>;
+export type Relation = Edge;
 export interface Catalog {
     edit: boolean;
     editEntity: Entity | undefined;
@@ -45,6 +46,7 @@ const catalogSlice = createSlice({
             const idx = state.entities.findIndex((entity: Entity) => entity.id === entityId);
 
             state.entities[idx] = action.payload;
+            putEntity(action.payload);
         },
 
         setKindFilter: (state, action: PayloadAction<string[]>) => {

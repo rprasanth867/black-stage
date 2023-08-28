@@ -1,7 +1,5 @@
 import { Kind, Relation } from 'utils/contants';
 
-import { fullData } from '../../data';
-
 const getID = (name: string): string => {
     let id = name;
 
@@ -25,7 +23,7 @@ type IRelation = {
    value: string;
 };
 
-function useGraph() {
+function useGraph(fullData: any) {
     const entities = [];
     const relations: IRelation[] = [];
     const foundRels: string[] = [];

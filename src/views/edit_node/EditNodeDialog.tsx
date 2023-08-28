@@ -1,5 +1,5 @@
 import { CaretRightOutlined } from '@ant-design/icons';
-import { Collapse, CollapseProps, Drawer, Form, Input } from 'antd';
+import { Button, Collapse, CollapseProps, Drawer, Form, Input } from 'antd';
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -30,9 +30,9 @@ function EditNodeDialog() {
 
 
     const onSave = useCallback((values: any) => {
-        console.log('VRRRR', values);
         const newData: YAMLData = {
             id: yamlData.id,
+            path: yamlData.path,
             apiVersion: yamlData.apiVersion,
             kind: yamlData.kind,
             metadata: values.metadata,
@@ -73,14 +73,14 @@ function EditNodeDialog() {
             onClose = { onClose }
             open = { edit && open }
             placement = 'right'
-            title = { <p>{`Edit ${yamlData?.kind}`}</p> }>
+            title = { `Edit ${yamlData?.kind}` }>
             <Form
                 initialValues = {{
                     apiVersion: yamlData?.apiVersion,
                     metadata: yamlData.metadata,
                     spec: yamlData.spec
                 }}
-                onValuesChange = { (changedValues, allValues) => onSave(allValues) }
+                onFinish = { onSave }
                 { ...layout }
                 style = {{ display: 'flex',
                     flexDirection: 'column',
@@ -94,12 +94,31 @@ function EditNodeDialog() {
                         style = {{ margin: '12px' }}>
                         <Input />
                     </Form.Item>
+                    <Form.Item
+                        label = 'Path'
+                        name = { 'path' }
+                        style = {{ margin: '12px' }}>
+                        <Input />
+                    </Form.Item>
                     <Collapse
                         defaultActiveKey = { [ '1', '2' ] }
                         expandIcon = { ({ isActive }) => <CaretRightOutlined rotate = { isActive ? 90 : 0 } /> }
                         items = { items }
                         style = {{ borderRadius: '0px',
                             borderRight: 'none' }} />
+                </div>
+                <div
+                    style = {{ display: 'flex',
+                        flexDirection: 'row',
+                        gap: '20px',
+                        padding: '15px',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderTop: '2px #F1F1F1 solid' }}>
+                    <Button>Delete</Button>
+                    <Button
+                        htmlType = 'submit'
+                        type = 'primary'>Save</Button>
                 </div>
             </Form>
         </Drawer>

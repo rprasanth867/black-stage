@@ -3,16 +3,15 @@ import { Kind, Relation } from 'utils/contants';
 import { KindType, YAMLData } from 'views/graph/types';
 
 
-export function getDefaultNodeData(kind: KindType): YAMLData {
+export function getDefaultNodeData(kind: KindType, id: string): YAMLData {
     return {
         apiVersion: 'default',
+        id,
+        path: '',
         kind,
         metadata: {
             name: `new-${kind}`,
             title: `New ${kind}`
-        },
-        spec: {
-
         }
     };
 }

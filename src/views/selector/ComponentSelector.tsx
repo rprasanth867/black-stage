@@ -14,12 +14,11 @@ function ComponentSelector() {
     const getDefaultData = (kind: KindType): YAMLData => {
         return {
             apiVersion: 'default',
+            id: 'default',
+            path: 'none',
             kind,
             metadata: {
                 name: kind
-            },
-            spec: {
-
             }
         };
     };

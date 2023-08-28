@@ -12,6 +12,7 @@ import ReactFlow, {
     applyNodeChanges,
     useReactFlow
 } from 'reactflow';
+import { getEntitites } from 'service/catalog';
 import { getDefaultNodeData } from 'utils/graph_util';
 
 import CustomEdge from '../../components/Edge';
@@ -89,62 +90,66 @@ function GraphEditor() {
     const entities = allEntities.filter(entity => kindFilter.includes(entity.data.kind));
     const entIds = entities.map(entity => entity.id);
 
-    console.log('vrr filtered ents', entIds);
 
     const relations = allRelations
     .filter(relation => entIds.includes(relation.source) && entIds.includes(relation.target));
 
-    console.log('vrr filtered rels', relations);
     const dispatch = useDispatch();
     const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
     const [ reactFlowInstance, setReactFlowInstance ] = useState<ReactFlowInstance | null>(null);
-    const { entities: initEntitites, relations: initRelations } = useGraph();
+
     const { getLayoutedElements } = useLayoutedElements();
 
 
     useEffect(() => {
-        const lents = [];
-        const lrels = [];
-        const nodeIds = [];
 
-        for (const ent of initEntitites) {
-            nodeIds.push(ent.id);
-            const newNode: Node = {
-                id: ent.id ?? '',
-                type: 'kind',
-                position: { x: 0,
-                    y: 0 },
-                data: {
-                    ...ent,
-                    id: ent.id
-                }
-            };
+        getEntitites()
+        .then(res => {
+            const { entities: initEntitites, relations: initRelations } = useGraph(res.data);
+            const lents = [];
+            const lrels = [];
+            const nodeIds = [];
 
-            lents.push(newNode);
-        }
-
-
-        for (const rel of initRelations) {
-            if (nodeIds.includes(rel.source) && nodeIds.includes(rel.target)) {
-                const newEdge: Edge = {
-                    id: rel.id,
-                    source: rel.source,
-                    label: rel.value,
-                    target: rel.target,
-                    type: 'buttonedge'
+            for (const ent of initEntitites) {
+                nodeIds.push(ent.id);
+                const newNode: Node = {
+                    id: ent.id ?? '',
+                    type: 'kind',
+                    position: { x: 0,
+                        y: 0 },
+                    data: {
+                        ...ent,
+                        id: ent.id
+                    }
                 };
 
-                lrels.push(newEdge);
+                lents.push(newNode);
             }
-        }
-        dispatch(setEntities(lents));
-        dispatch(setRelations(lrels));
 
-        setTimeout(() => {
-            getLayoutedElements({ 'elk.algorithm': 'layered',
-                'elk.direction': 'RIGHT' });
-        }, 300);
 
+            for (const rel of initRelations) {
+                if (nodeIds.includes(rel.source) && nodeIds.includes(rel.target)) {
+                    const newEdge: Edge = {
+                        id: rel.id,
+                        source: rel.source,
+                        label: rel.value,
+                        target: rel.target,
+                        type: 'buttonedge'
+                    };
+
+                    lrels.push(newEdge);
+                }
+            }
+            dispatch(setEntities(lents));
+            dispatch(setRelations(lrels));
+            setTimeout(() => {
+                getLayoutedElements({ 'elk.algorithm': 'layered',
+                    'elk.direction': 'RIGHT' });
+            }, 300);
+        })
+        .catch(err => {
+            console.error('vrrr', err);
+        });
     }, []);
 
 
@@ -155,7 +160,6 @@ function GraphEditor() {
 
     const onNodesChange = useCallback(
     (changes: any) => {
-        console.log('vrr', changes);
         dispatch(setEntities(applyNodeChanges(changes, allEntities)));
     }, [ allEntities ]
     );
@@ -201,8 +205,7 @@ function GraphEditor() {
             type: 'kind',
             position,
             data: {
-                ...getDefaultNodeData(kind),
-                id: nodeId
+                ...getDefaultNodeData(kind, nodeId)
             }
         };
 

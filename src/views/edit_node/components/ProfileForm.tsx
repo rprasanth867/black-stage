@@ -26,8 +26,8 @@ function ProfileForm(props: IProps) {
                     style = {{ display: 'flex',
                         flexDirection: 'column',
                         flex: 1 }}>
-                    <span style = {{ fontWeight: 'bold' }}>{value?.displayName}</span>
-                    <span>{value?.email}</span>
+                    <span style = {{ fontWeight: 'bold' }}>{value?.displayName ?? 'No Name'}</span>
+                    <span style = {{ fontSize: '10px' }}>{value?.email ?? 'No Email'}</span>
                 </div>
                 {/* <Button>Edit</Button> */}
             </div>
