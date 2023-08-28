@@ -160,12 +160,12 @@ export function getAllSystems(state: IReduxState): string[] {
 
 }
 
-export function getAllComponents(state: IReduxState): string[] {
+export function getAllComponents(state: IReduxState, except: string): string[] {
     const { entities } = state.catalog;
     const res: string[] = [];
 
     for (const entity of entities) {
-        if (entity.data.kind === Kind.Component) {
+        if (entity.data.kind === Kind.Component && entity.id !== except) {
             res.push(getID(entity));
         }
     }
@@ -188,14 +188,14 @@ export function getAllAPIs(state: IReduxState): string[] {
     return res;
 }
 
-export function getAllPossibleDependencies(state: IReduxState): string[] {
+export function getAllPossibleDependencies(state: IReduxState, except: string): string[] {
     const { entities } = state.catalog;
     const res: string[] = [];
 
     for (const entity of entities) {
         const kind = entity.data.kind;
 
-        if (kind === Kind.Resource || kind === Kind.Component) {
+        if ((kind === Kind.Resource || kind === Kind.Component) && entity.id !== except) {
             res.push(getIDWithKind(entity));
         }
     }
@@ -203,12 +203,12 @@ export function getAllPossibleDependencies(state: IReduxState): string[] {
     return res;
 }
 
-export function getAllGroups(state: IReduxState): string[] {
+export function getAllGroups(state: IReduxState, except: string): string[] {
     const { entities } = state.catalog;
     const res: string[] = [];
 
     for (const entity of entities) {
-        if (entity.data.kind === Kind.Group) {
+        if (entity.data.kind === Kind.Group && entity.id !== except) {
             res.push(getID(entity));
         }
     }

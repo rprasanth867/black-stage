@@ -1,5 +1,5 @@
 
-import { notification } from 'antd';
+import { message, notification } from 'antd';
 import axios from 'axios';
 import { Entity } from 'redux/reducers/catalog';
 
@@ -26,9 +26,7 @@ export function putEntity(entity: Entity) {
 
     axios.put('/api/v1/studio/entity', data)
     .then(() => {
-        notification.success({
-            message: 'Saved'
-        });
+        message.success('Saved');
     })
     .catch(() => {
         notification.error({

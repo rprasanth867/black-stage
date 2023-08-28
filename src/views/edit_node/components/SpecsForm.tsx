@@ -1,5 +1,6 @@
 import { AutoComplete, Form, Select } from 'antd';
 import { useSelector } from 'react-redux';
+import { IReduxState } from 'redux/store';
 import {
     getAllAPIs,
     getAllComponents,
@@ -16,6 +17,7 @@ import { KindType, Spec } from 'views/graph/types';
 import ProfileForm from './ProfileForm';
 
 interface IProps {
+  entityID: string;
   id?: any;
   kind: KindType;
   onChange?: (values: Spec) => void;
@@ -27,50 +29,11 @@ const layout = {
     wrapperCol: { span: 20 }
 };
 
-// const specsInfo = {
-//     [Kind.Component]: {
-//         [REQUIRED]: [ 'type', 'lifecycle', 'owner' ],
-//         [OPTIONAL]: [ 'system', 'subcomponentOf', 'providesApis', 'consumesApis', 'dependsOn' ]
-//     },
-//     [Kind.API]: {
-//         [REQUIRED]: [ 'type', 'lifecycle', 'owner' ],
-//         [OPTIONAL]: [ 'system', 'definition' ]
-//     },
-//     [Kind.Group]: {
-//         [REQUIRED]: [ 'type', 'children' ],
-//         [OPTIONAL]: [ 'members', 'parent', 'profile' ]
-//     },
-//     [Kind.User]: {
-//         [REQUIRED]: [ 'memberOf' ],
-//         [OPTIONAL]: [ 'profile' ]
-//     },
-//     [Kind.Resource]: {
-//         [REQUIRED]: [ 'owner', 'type' ],
-//         [OPTIONAL]: [ 'system', 'dependsOn', 'dependencyOf' ]
-//     },
-//     [Kind.System]: {
-//         [REQUIRED]: [ 'owner' ],
-//         [OPTIONAL]: [ 'domain' ]
-//     },
-//     [Kind.Domain]: {
-//         [REQUIRED]: [ 'owner' ],
-//         [OPTIONAL]: []
-//     },
-//     [Kind.Location]: {
-//         [REQUIRED]: [],
-//         [OPTIONAL]: [ 'type', 'target', 'targets', 'presence' ]
-//     },
-//     [Kind.Template]: {
-//         [REQUIRED]: [ 'type', 'parameters', 'steps' ],
-//         [OPTIONAL]: [ 'owner' ]
-//     }
-// };
-
 const knownLifeCycles = [ { value: 'experimental' }, { value: 'production' }, { value: 'deprecated' } ];
 const knownTypes = [ { value: 'service' }, { value: 'website' }, { value: 'library' } ];
 
 function SpecsForm(props: IProps) {
-    const { id, kind, value = {}, onChange } = props;
+    const { id, kind, value = {}, onChange, entityID } = props;
 
     const handleValuesChanges = (changed: any, values: any) => {
         if (onChange) {
@@ -91,16 +54,18 @@ function SpecsForm(props: IProps) {
     });
 
     // add exclude
-    const allComponents = useSelector(getAllComponents).map(comp => {
+    const allComponents = useSelector((state: IReduxState) => getAllComponents(state, entityID)).map(comp => {
         return { value: comp };
     });
 
     // add exclude
-    const allPossibleDependencies = useSelector(getAllPossibleDependencies).map(comp => {
+    const allPossibleDependencies = useSelector((state: IReduxState) => getAllPossibleDependencies(state, entityID))
+    .map(comp => {
         return { value: comp };
     });
 
-    const allGroups = useSelector(getAllGroups).map(group => {
+    // add exclude
+    const allGroups = useSelector((state: IReduxState) => getAllGroups(state, entityID)).map(group => {
         return { value: group };
     });
 

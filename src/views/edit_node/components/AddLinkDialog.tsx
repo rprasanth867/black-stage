@@ -1,6 +1,5 @@
 import Icon from '@ant-design/icons';
 import { Form, Input, Select } from 'antd';
-import React from 'react';
 
 import { Validator } from '../../../utils/Validators';
 import { Link } from '../../graph/types';

@@ -1,7 +1,9 @@
-import { CaretRightOutlined } from '@ant-design/icons';
-import { Button, Collapse, CollapseProps, Drawer, Form, Input } from 'antd';
+import Icon, { CaretRightOutlined } from '@ant-design/icons';
+import { App, Button, Collapse, CollapseProps, Drawer, Form, Input } from 'antd';
 import { useCallback, useState } from 'react';
+import { FaCode } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
+import YamlCodeEditor from 'views/code_editor/YamlCodeEditor';
 
 import { cancelEditEntity, deleteEntity, updateEntity } from '../../redux/reducers/catalog';
 import { IReduxState } from '../../redux/store';
@@ -20,6 +22,7 @@ function EditNodeDialog() {
 
     const { editEntity, edit } = useSelector((state: IReduxState) => state.catalog);
     const [ open, setOpen ] = useState(true);
+    const { modal } = App.useApp();
     const yamlData = editEntity?.data as YAMLData;
     const dispatch = useDispatch();
 
@@ -63,13 +66,25 @@ function EditNodeDialog() {
             children: (<Form.Item
                 name = { 'spec' }
                 noStyle = { true }>
-                <SpecsForm kind = { yamlData.kind } />
+                <SpecsForm
+                    entityID = { yamlData.id }
+                    kind = { yamlData.kind } />
             </Form.Item>)
         }
     ];
 
     const deleteNode = () => {
         dispatch(deleteEntity(yamlData.id));
+    };
+
+    const openCodeEditor = () => {
+        modal.confirm({
+            icon: <Icon component = { FaCode } />,
+            title: 'Editor',
+            width: '80%',
+            style: { height: '50vh' },
+            content: <YamlCodeEditor yamlData = { yamlData } />
+        });
     };
 
     return (
@@ -116,6 +131,7 @@ function EditNodeDialog() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         borderTop: '2px #F1F1F1 solid' }}>
+                    <Button onClick = { openCodeEditor }>Code</Button>
                     <Button onClick = { deleteNode }>Delete</Button>
                     <Button
                         htmlType = 'submit'
