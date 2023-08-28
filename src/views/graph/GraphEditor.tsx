@@ -88,12 +88,17 @@ function GraphEditor() {
     } = useSelector((state: IReduxState) => state.catalog);
     const entities = allEntities.filter(entity => kindFilter.includes(entity.data.kind));
     const entIds = entities.map(entity => entity.id);
+
+    console.log('vrr filtered ents', entIds);
+
     const relations = allRelations
     .filter(relation => entIds.includes(relation.source) && entIds.includes(relation.target));
+
+    console.log('vrr filtered rels', relations);
     const dispatch = useDispatch();
     const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
     const [ reactFlowInstance, setReactFlowInstance ] = useState<ReactFlowInstance | null>(null);
-    const { entities: ents, relations: rels } = useGraph();
+    const { entities: initEntitites, relations: initRelations } = useGraph();
     const { getLayoutedElements } = useLayoutedElements();
 
 
@@ -102,7 +107,7 @@ function GraphEditor() {
         const lrels = [];
         const nodeIds = [];
 
-        for (const ent of ents) {
+        for (const ent of initEntitites) {
             nodeIds.push(ent.id);
             const newNode: Node = {
                 id: ent.id ?? '',
@@ -119,10 +124,10 @@ function GraphEditor() {
         }
 
 
-        for (const rel of rels) {
+        for (const rel of initRelations) {
             if (nodeIds.includes(rel.source) && nodeIds.includes(rel.target)) {
                 const newEdge: Edge = {
-                    id: `${rel.source}:${rel.target}`,
+                    id: rel.id,
                     source: rel.source,
                     label: rel.value,
                     target: rel.target,
@@ -150,21 +155,22 @@ function GraphEditor() {
 
     const onNodesChange = useCallback(
     (changes: any) => {
-        dispatch(setEntities(applyNodeChanges(changes, entities)));
-    }, [ entities ]
+        console.log('vrr', changes);
+        dispatch(setEntities(applyNodeChanges(changes, allEntities)));
+    }, [ allEntities ]
     );
 
     const onEdgesChange = useCallback(
     (changes: any) => {
-        dispatch(setRelations(applyEdgeChanges(changes, relations)));
-    }, [ relations ]
+        dispatch(setRelations(applyEdgeChanges(changes, allRelations)));
+    }, [ allRelations ]
     );
 
     const onConnect = useCallback(
     (connection: any) => {
         dispatch(setRelations(addEdge({ ...connection,
-            type: 'buttonedge' }, relations)));
-    }, [ relations ]
+            type: 'buttonedge' }, allRelations)));
+    }, [ allRelations ]
     );
 
     const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
@@ -200,9 +206,9 @@ function GraphEditor() {
             }
         };
 
-        dispatch(setEntities([ ...entities, newNode ]));
+        dispatch(setEntities([ ...allEntities, newNode ]));
     },
-    [ reactFlowInstance, entities ]
+    [ reactFlowInstance, allEntities ]
     );
 
 

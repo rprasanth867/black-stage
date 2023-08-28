@@ -73,7 +73,7 @@ function EditNodeDialog() {
             onClose = { onClose }
             open = { edit && open }
             placement = 'right'
-            title = { `Edit ${yamlData?.kind}` }>
+            title = { <p>{`Edit ${yamlData?.kind}`}</p> }>
             <Form
                 initialValues = {{
                     apiVersion: yamlData?.apiVersion,

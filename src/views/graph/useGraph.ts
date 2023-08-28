@@ -19,6 +19,7 @@ const getID = (name: string): string => {
 };
 
 type IRelation = {
+   id: string;
    source: string;
    target: string;
    value: string;
@@ -27,6 +28,21 @@ type IRelation = {
 function useGraph() {
     const entities = [];
     const relations: IRelation[] = [];
+    const foundRels: string[] = [];
+
+    const addRelation = (source: string, target: string, value: string) => {
+        const id = `${source}:${target}`;
+
+        if (!foundRels.includes(id)) {
+            relations.push({
+                'id': id,
+                'source': source,
+                'target': target,
+                'value': value
+            });
+            foundRels.push(id);
+        }
+    };
 
     for (const data of fullData) {
         const entity = { ...data.entity };
@@ -41,43 +57,30 @@ function useGraph() {
             const { owner, system, subcomponentOf, providesApis, consumesApis, dependsOn } = entity.spec;
 
             if (owner) {
-                relations.push({ source: entity.id,
-                    target: getID(owner),
-                    value: Relation.ownedBy
-                });
+                addRelation(entity.id, getID(owner), Relation.ownedBy);
             }
             if (system) {
-                relations.push({ source: getID(system),
-                    target: entity.id,
-                    value: Relation.hasPart });
+                addRelation(getID(system), entity.id, Relation.hasPart);
             }
             if (subcomponentOf) {
-                relations.push({ source: getID(subcomponentOf),
-                    target: entity.id,
-                    value: Relation.hasPart });
+                addRelation(getID(subcomponentOf), entity.id, Relation.hasPart);
             }
 
             if (providesApis) {
                 for (const api of providesApis) {
-                    relations.push({ source: entity.id,
-                        target: getID(api),
-                        value: Relation.providesAPI });
+                    addRelation(entity.id, getID(api), Relation.providesAPI);
                 }
             }
 
             if (consumesApis) {
                 for (const api of consumesApis) {
-                    relations.push({ source: entity.id,
-                        target: getID(api),
-                        value: Relation.consumesAPI });
+                    addRelation(entity.id, getID(api), Relation.consumesAPI);
                 }
             }
 
             if (dependsOn) {
                 for (const ent of dependsOn) {
-                    relations.push({ source: entity.id,
-                        target: getID(ent),
-                        value: Relation.dependsOn });
+                    addRelation(entity.id, getID(ent), Relation.dependsOn);
                 }
             }
 
@@ -86,39 +89,28 @@ function useGraph() {
             const { owner, system } = entity.spec;
 
             if (owner) {
-                relations.push({ source: entity.id,
-                    target: getID(owner),
-                    value: Relation.ownedBy
-                });
+                addRelation(entity.id, getID(owner), Relation.ownedBy);
             }
 
             if (system) {
-                relations.push({ source: getID(system),
-                    target: entity.id,
-                    value: Relation.hasPart });
+                addRelation(getID(system), entity.id, Relation.hasPart);
             }
         } else if (entity.kind === Kind.Group) {
             const { parent, children, members } = entity.spec;
 
             if (parent) {
-                relations.push({ source: getID(parent),
-                    target: entity.id,
-                    value: Relation.parentOf });
+                addRelation(getID(parent), entity.id, Relation.parentOf);
             }
 
             if (children) {
                 for (const child of children) {
-                    relations.push({ source: entity.id,
-                        target: getID(child),
-                        value: Relation.parentOf });
+                    addRelation(entity.id, getID(child), Relation.parentOf);
                 }
             }
 
             if (members) {
                 for (const member of members) {
-                    relations.push({ source: entity.id,
-                        target: getID(member),
-                        value: Relation.hasMember });
+                    addRelation(entity.id, getID(member), Relation.hasMember);
                 }
             }
 
@@ -127,40 +119,29 @@ function useGraph() {
 
             if (memberOf) {
                 for (const group of memberOf) {
-                    relations.push({ source: getID(group),
-                        target: entity.id,
-                        value: Relation.hasMember });
+                    addRelation(getID(group), entity.id, Relation.hasMember);
                 }
             }
         } else if (entity.kind === Kind.Resource) {
             const { owner, system, dependsOn, dependencyOf } = entity.spec;
 
             if (owner) {
-                relations.push({ source: entity.id,
-                    target: getID(owner),
-                    value: Relation.ownedBy
-                });
+                addRelation(entity.id, getID(owner), Relation.ownedBy);
             }
 
             if (dependsOn) {
                 for (const ent of dependsOn) {
-                    relations.push({ source: entity.id,
-                        target: getID(ent),
-                        value: Relation.dependsOn });
+                    addRelation(entity.id, getID(ent), Relation.dependsOn);
                 }
             }
 
             if (system) {
-                relations.push({ source: getID(system),
-                    target: entity.id,
-                    value: Relation.hasPart });
+                addRelation(getID(system), entity.id, Relation.hasPart);
             }
 
             if (dependencyOf) {
                 for (const main of dependencyOf) {
-                    relations.push({ source: getID(main),
-                        target: entity.id,
-                        value: Relation.dependsOn });
+                    addRelation(getID(main), entity.id, Relation.dependsOn);
                 }
             }
 
@@ -168,24 +149,16 @@ function useGraph() {
             const { domain, owner } = entity.spec;
 
             if (owner) {
-                relations.push({ source: entity.id,
-                    target: getID(owner),
-                    value: Relation.ownedBy
-                });
+                addRelation(entity.id, getID(owner), Relation.ownedBy);
             }
             if (domain) {
-                relations.push({ source: getID(domain),
-                    target: entity.id,
-                    value: Relation.hasPart });
+                addRelation(getID(domain), entity.id, Relation.hasPart);
             }
         } else if (entity.kind === Kind.Domain) {
             const { owner } = entity.spec;
 
             if (owner) {
-                relations.push({ source: entity.id,
-                    target: getID(owner),
-                    value: Relation.ownedBy
-                });
+                addRelation(entity.id, getID(owner), Relation.ownedBy);
             }
         }
     }
