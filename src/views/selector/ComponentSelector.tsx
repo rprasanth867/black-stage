@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setKindFilter } from 'redux/reducers/catalog';
 import { IReduxState } from 'redux/store';
 import { Kind } from 'utils/contants';
-import { getAllKinds } from 'views/graph/functions';
+import { getAllKinds } from 'utils/graph_util';
 
 import { KindType, YAMLData } from '../graph/types';
 

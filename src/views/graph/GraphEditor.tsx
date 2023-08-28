@@ -12,13 +12,13 @@ import ReactFlow, {
     applyNodeChanges,
     useReactFlow
 } from 'reactflow';
+import { getDefaultNodeData } from 'utils/graph_util';
 
 import CustomEdge from '../../components/Edge';
 import { setEntities, setRelations } from '../../redux/reducers/catalog';
 import { IReduxState } from '../../redux/store';
 import KindNode from '../selector/KindNode';
 
-import { getDefaultNodeData } from './functions';
 import useGraph from './useGraph';
 
 

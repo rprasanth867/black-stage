@@ -1,6 +1,8 @@
 import { Select } from 'antd';
+import { useSelector } from 'react-redux';
 import { BaseEdge, EdgeLabelRenderer, EdgeProps, getBezierPath } from 'reactflow';
-import { RelationUtil } from 'utils/RelationUtil';
+import { IReduxState } from 'redux/store';
+import { getPossibleRelations } from 'utils/graph_util';
 
 type IEdge = EdgeProps;
 function Edge(props: IEdge) {
@@ -31,7 +33,7 @@ function Edge(props: IEdge) {
     };
 
 
-    const ops = RelationUtil.getPossibleRelations(source, target);
+    const ops = useSelector((state: IReduxState) => getPossibleRelations(state, source, target));
     const options = ops.map(op => {
         return { value: op,
             label: op };

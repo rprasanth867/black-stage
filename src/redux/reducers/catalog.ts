@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { Edge, Node } from 'reactflow';
-import { getAllKinds } from 'views/graph/functions';
+import { getAllKinds } from 'utils/graph_util';
 import { YAMLData } from 'views/graph/types';
 
 

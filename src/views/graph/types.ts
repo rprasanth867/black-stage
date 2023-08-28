@@ -7,6 +7,11 @@ export type Link = {
     url: string;
 };
 
+export type Profile = {
+    displayName?: string;
+    email?: string;
+    picture?: string;
+};
 export type Spec = {
     apiConsumedBy?: string[];
     children?: string[];
@@ -22,12 +27,7 @@ export type Spec = {
     parameters?: string;
     parent?: string;
     presence?: string;
-    profile?: {
-        displayName?: string;
-        email?: string;
-        picture?: string;
-    };
-
+    profile?: Profile;
     providesApis?: string[];
 
     // doubt
