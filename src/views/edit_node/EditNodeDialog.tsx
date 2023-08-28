@@ -3,7 +3,7 @@ import { Button, Collapse, CollapseProps, Drawer, Form, Input } from 'antd';
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { cancelEditEntity, updateEntity } from '../../redux/reducers/catalog';
+import { cancelEditEntity, deleteEntity, updateEntity } from '../../redux/reducers/catalog';
 import { IReduxState } from '../../redux/store';
 import { YAMLData } from '../graph/types';
 
@@ -32,11 +32,11 @@ function EditNodeDialog() {
     const onSave = useCallback((values: any) => {
         const newData: YAMLData = {
             id: yamlData.id,
-            path: yamlData.path,
+            path: `${values.path}.yaml`,
             apiVersion: yamlData.apiVersion,
             kind: yamlData.kind,
             metadata: values.metadata,
-            spec: { }
+            spec: values.spec
         };
 
         if (editEntity) {
@@ -68,6 +68,10 @@ function EditNodeDialog() {
         }
     ];
 
+    const deleteNode = () => {
+        dispatch(deleteEntity(yamlData.id));
+    };
+
     return (
         <Drawer
             onClose = { onClose }
@@ -75,11 +79,7 @@ function EditNodeDialog() {
             placement = 'right'
             title = { `Edit ${yamlData?.kind}` }>
             <Form
-                initialValues = {{
-                    apiVersion: yamlData?.apiVersion,
-                    metadata: yamlData.metadata,
-                    spec: yamlData.spec
-                }}
+                initialValues = {{ ...yamlData }}
                 onFinish = { onSave }
                 { ...layout }
                 style = {{ display: 'flex',
@@ -98,7 +98,7 @@ function EditNodeDialog() {
                         label = 'Path'
                         name = { 'path' }
                         style = {{ margin: '12px' }}>
-                        <Input />
+                        <Input addonAfter = { '.yaml' } />
                     </Form.Item>
                     <Collapse
                         defaultActiveKey = { [ '1', '2' ] }
@@ -115,7 +115,7 @@ function EditNodeDialog() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         borderTop: '2px #F1F1F1 solid' }}>
-                    <Button>Delete</Button>
+                    <Button onClick = { deleteNode }>Delete</Button>
                     <Button
                         htmlType = 'submit'
                         type = 'primary'>Save</Button>

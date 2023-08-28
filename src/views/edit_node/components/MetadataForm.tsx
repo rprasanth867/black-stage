@@ -36,7 +36,7 @@ function MetadataForm(props: IProps) {
                 label = 'Name Space'
                 name = 'namespace'
                 rules = { metaDataRules.namespace }>
-                <Input />
+                <Input placeholder = 'default' />
             </Form.Item>
             <Form.Item
                 label = 'Name'

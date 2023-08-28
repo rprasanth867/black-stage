@@ -70,7 +70,13 @@ const knownLifeCycles = [ { value: 'experimental' }, { value: 'production' }, { 
 const knownTypes = [ { value: 'service' }, { value: 'website' }, { value: 'library' } ];
 
 function SpecsForm(props: IProps) {
-    const { id, kind, value = {} } = props;
+    const { id, kind, value = {}, onChange } = props;
+
+    const handleValuesChanges = (changed: any, values: any) => {
+        if (onChange) {
+            onChange(values);
+        }
+    };
 
     const supportedSpecs = getSupportedSpecs(kind);
     const isVisible = (name: string) => supportedSpecs?.includes(name);
@@ -115,6 +121,7 @@ function SpecsForm(props: IProps) {
         <Form
             id = { id }
             initialValues = {{ ...value }}
+            onValuesChange = { handleValuesChanges }
             { ...layout }>
             {isVisible('profile') && <div style = {{ marginBottom: '10px' }}>
                 <span>Profile:</span>

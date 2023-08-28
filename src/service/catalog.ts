@@ -1,4 +1,5 @@
 
+import { notification } from 'antd';
 import axios from 'axios';
 import { Entity } from 'redux/reducers/catalog';
 
@@ -23,6 +24,35 @@ export function putEntity(entity: Entity) {
         path
     };
 
-    return axios.put('/api/v1/studio/entity', data);
+    axios.put('/api/v1/studio/entity', data)
+    .then(() => {
+        notification.success({
+            message: 'Saved'
+        });
+    })
+    .catch(() => {
+        notification.error({
+            message: 'Failed to save'
+        });
+    });
+
+}
+
+export function deleteEntityAPi(path: string) {
+    const payload = {
+        path
+    };
+
+    axios.delete('/api/v1/studio/entity', { data: payload })
+    .then(() => {
+        notification.success({
+            message: 'Deleted'
+        });
+    })
+    .catch(() => {
+        notification.error({
+            message: 'Failed to delete'
+        });
+    });
 
 }

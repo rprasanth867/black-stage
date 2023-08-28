@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { Edge, Node } from 'reactflow';
-import { putEntity } from 'service/catalog';
-import { getAllKinds } from 'utils/graph_util';
+import { deleteEntityAPi, putEntity } from 'service/catalog';
+import { getAllKinds, getUpdatedRelations } from 'utils/graph_util';
 import { YAMLData } from 'views/graph/types';
 
 
@@ -46,7 +46,21 @@ const catalogSlice = createSlice({
             const idx = state.entities.findIndex((entity: Entity) => entity.id === entityId);
 
             state.entities[idx] = action.payload;
+
+            // update relations
+            state.relations = getUpdatedRelations(state.entities);
             putEntity(action.payload);
+        },
+
+        deleteEntity: (state, action: PayloadAction<string>) => {
+            const entityId = action.payload;
+            const idx = state.entities.findIndex((entity: Entity) => entity.id === entityId);
+
+            console.log('VRRRR data', idx);
+            const path = state.entities[idx].data.path;
+
+            state.entities.splice(idx, 1);
+            deleteEntityAPi(path);
         },
 
         setKindFilter: (state, action: PayloadAction<string[]>) => {
@@ -62,7 +76,8 @@ export const {
     setKindFilter,
     initiateEditEntity,
     cancelEditEntity,
-    updateEntity
+    updateEntity,
+    deleteEntity
 } = catalogSlice.actions;
 
 export default catalogSlice.reducer;

@@ -1,3 +1,4 @@
+import { Entity as EntityType, Relation as RelationType } from 'redux/reducers/catalog';
 import { IReduxState } from 'redux/store';
 import { Kind, Relation } from 'utils/contants';
 import { KindType, YAMLData } from 'views/graph/types';
@@ -219,3 +220,163 @@ export function getAllDomains(state: IReduxState): string[] {
     return res;
 }
 
+
+export function getUpdatedRelations(entities: EntityType[]): RelationType[] {
+    const relations: any = [];
+    const foundRels: string[] = [];
+
+    const formID = (name: string): string => {
+        let id = name;
+
+        if (name.includes(':')) {
+            const parts = name.split(':');
+
+            id = parts[1];
+        }
+
+        if (!id.includes('/')) {
+            id = `default/${id}`;
+        }
+
+        return id;
+    };
+
+    const addRelation = (source: string, target: string, value: string) => {
+        const id = `${source}:${target}`;
+
+        if (!foundRels.includes(id)) {
+            relations.push({
+                'id': id,
+                'source': source,
+                'target': target,
+                'label': value,
+                'type': 'buttonedge'
+            });
+            foundRels.push(id);
+        }
+    };
+
+    for (const entityX of entities) {
+        const entity = { ...entityX.data };
+
+        if (entity.kind === Kind.Location || entity.kind === Kind.Domain) {
+            // eslint-disable-next-line no-continue
+            continue;
+        }
+        if (!entity.spec) {
+            // eslint-disable-next-line no-continue
+            continue;
+        }
+        if (entity.kind === Kind.Component) {
+            const { owner, system, subcomponentOf, providesApis, consumesApis, dependsOn } = entity.spec;
+
+            if (owner) {
+                addRelation(entity.id, formID(owner), Relation.ownedBy);
+            }
+            if (system) {
+                addRelation(formID(system), entity.id, Relation.hasPart);
+            }
+            if (subcomponentOf) {
+                addRelation(formID(subcomponentOf), entity.id, Relation.hasPart);
+            }
+
+            if (providesApis) {
+                for (const api of providesApis) {
+                    addRelation(entity.id, formID(api), Relation.providesAPI);
+                }
+            }
+
+            if (consumesApis) {
+                for (const api of consumesApis) {
+                    addRelation(entity.id, formID(api), Relation.consumesAPI);
+                }
+            }
+
+            if (dependsOn) {
+                for (const ent of dependsOn) {
+                    addRelation(entity.id, formID(ent), Relation.dependsOn);
+                }
+            }
+
+
+        } else if (entity.kind === Kind.API) {
+            const { owner, system } = entity.spec;
+
+            if (owner) {
+                addRelation(entity.id, formID(owner), Relation.ownedBy);
+            }
+
+            if (system) {
+                addRelation(formID(system), entity.id, Relation.hasPart);
+            }
+        } else if (entity.kind === Kind.Group) {
+            const { parent, children, members } = entity.spec;
+
+            if (parent) {
+                addRelation(formID(parent), entity.id, Relation.parentOf);
+            }
+
+            if (children) {
+                for (const child of children) {
+                    addRelation(entity.id, formID(child), Relation.parentOf);
+                }
+            }
+
+            if (members) {
+                for (const member of members) {
+                    addRelation(entity.id, formID(member), Relation.hasMember);
+                }
+            }
+
+        } else if (entity.kind === Kind.User) {
+            const { memberOf } = entity.spec;
+
+            if (memberOf) {
+                for (const group of memberOf) {
+                    addRelation(formID(group), entity.id, Relation.hasMember);
+                }
+            }
+        } else if (entity.kind === Kind.Resource) {
+            const { owner, system, dependsOn, dependencyOf } = entity.spec;
+
+            if (owner) {
+                addRelation(entity.id, formID(owner), Relation.ownedBy);
+            }
+
+            if (dependsOn) {
+                for (const ent of dependsOn) {
+                    addRelation(entity.id, formID(ent), Relation.dependsOn);
+                }
+            }
+
+            if (system) {
+                addRelation(formID(system), entity.id, Relation.hasPart);
+            }
+
+            if (dependencyOf) {
+                for (const main of dependencyOf) {
+                    addRelation(formID(main), entity.id, Relation.dependsOn);
+                }
+            }
+
+        } else if (entity.kind === Kind.System) {
+            const { domain, owner } = entity.spec;
+
+            if (owner) {
+                addRelation(entity.id, formID(owner), Relation.ownedBy);
+            }
+            if (domain) {
+                addRelation(formID(domain), entity.id, Relation.hasPart);
+            }
+        } else if (entity.kind === Kind.Domain) {
+            const { owner } = entity.spec;
+
+            if (owner) {
+                addRelation(entity.id, formID(owner), Relation.ownedBy);
+            }
+        }
+    }
+
+    return relations;
+
+}

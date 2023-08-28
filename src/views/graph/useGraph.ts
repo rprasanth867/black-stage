@@ -16,7 +16,7 @@ const getID = (name: string): string => {
     return id;
 };
 
-type IRelation = {
+export type IRelation = {
    id: string;
    source: string;
    target: string;
@@ -50,7 +50,12 @@ function useGraph(fullData: any) {
             continue;
         }
         entity.id = data.id;
+        entity.path = data.path;
         entities.push(entity);
+        if (!entity.spec) {
+            // eslint-disable-next-line no-continue
+            continue;
+        }
         if (entity.kind === Kind.Component) {
             const { owner, system, subcomponentOf, providesApis, consumesApis, dependsOn } = entity.spec;
 
