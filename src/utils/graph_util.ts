@@ -118,10 +118,10 @@ export function getPossibleRelations(state: IReduxState, sourceID: string,
         target };
 }
 
-function getID(entity: EntityType) {
+export function getID(entity: EntityType) {
     const { data } = entity;
 
-    if (data.metadata.namespace) {
+    if (data.metadata.namespace && data.metadata.namespace.length > 0) {
         return `${data.metadata.namespace}/${data.metadata.name}`;
     }
 

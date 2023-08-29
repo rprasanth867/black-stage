@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { Edge, Node } from 'reactflow';
 import { deleteEntityAPi, putEntity } from 'service/catalog';
-import { getAllKinds, getUpdatedRelations } from 'utils/graph_util';
+import { getAllKinds, getID, getUpdatedRelations } from 'utils/graph_util';
 import { YAMLData } from 'views/graph/types';
 
 
@@ -44,12 +44,25 @@ const catalogSlice = createSlice({
         updateEntity: (state, action: PayloadAction<Entity>) => {
             const entityId = action.payload.id;
             const idx = state.entities.findIndex((entity: Entity) => entity.id === entityId);
+            const oldEntity = state.entities[idx];
+            const newEntity = action.payload;
 
             // name or namespace changed
+            if ((newEntity.data.metadata.name !== oldEntity.data.metadata.name)
+            || (newEntity.data.metadata.namespace !== oldEntity.data.metadata.namespace)) {
+                let newId = getID(newEntity);
+
+                if (!newId.includes('/')) {
+                    newId = `default/${newId}`;
+                }
+
+                newEntity.id = newId;
+                newEntity.data.id = newId;
+            }
 
             // path change
 
-            state.entities[idx] = action.payload;
+            state.entities[idx] = newEntity;
 
             // update relations
             state.relations = getUpdatedRelations(state.entities);

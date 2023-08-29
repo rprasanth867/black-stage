@@ -1,5 +1,5 @@
 
-import { message, notification } from 'antd';
+import { message } from 'antd';
 import axios from 'axios';
 import { Entity } from 'redux/reducers/catalog';
 
@@ -29,9 +29,7 @@ export function putEntity(entity: Entity) {
         message.success('Saved');
     })
     .catch(() => {
-        notification.error({
-            message: 'Failed to save'
-        });
+        message.error('Failed to save');
     });
 
 }
@@ -43,14 +41,10 @@ export function deleteEntityAPi(path: string) {
 
     axios.delete('/api/v1/studio/entity', { data: payload })
     .then(() => {
-        notification.success({
-            message: 'Deleted'
-        });
+        message.success('Deleted');
     })
     .catch(() => {
-        notification.error({
-            message: 'Failed to delete'
-        });
+        message.error('Failed to delete');
     });
 
 }
