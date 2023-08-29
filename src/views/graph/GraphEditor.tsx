@@ -145,7 +145,7 @@ function GraphEditor() {
             setTimeout(() => {
                 getLayoutedElements({ 'elk.algorithm': 'layered',
                     'elk.direction': 'RIGHT' });
-            }, 300);
+            }, 100);
         })
         .catch(err => {
             console.error('vrrr', err);

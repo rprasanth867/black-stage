@@ -1,4 +1,4 @@
-import { Entity as EntityType, Relation as RelationType } from 'redux/reducers/catalog';
+import { Entity, Entity as EntityType, Relation as RelationType } from 'redux/reducers/catalog';
 import { IReduxState } from 'redux/store';
 import { Kind, Relation } from 'utils/contants';
 import { KindType, YAMLData } from 'views/graph/types';
@@ -130,29 +130,50 @@ function getID(entity: EntityType) {
 function getIDWithKind(entity: EntityType) {
     return `${entity.data.kind.toLocaleLowerCase()}:${entity.id}`;
 }
+type Option = { label: string; value: string; };
 
-export function getAllOwners(state: IReduxState): string[] {
+const getLabel = (entity: Entity, id: string) => {
+    const title = entity.data.metadata.title;
+
+    if (title === undefined || title === null || title.length === 0) {
+        return id;
+    }
+
+    return title;
+};
+
+export function getAllOwners(state: IReduxState): Option[] {
     const { entities } = state.catalog;
-    const res: string[] = [];
+    const res: Option[] = [];
 
     for (const entity of entities) {
         const kind = entity.data.kind;
 
         if (kind === Kind.Group || kind === Kind.User) {
-            res.push(getIDWithKind(entity));
+            const id = getIDWithKind(entity);
+
+            res.push({
+                label: getLabel(entity, id),
+                value: id
+            });
         }
     }
 
     return res;
 }
 
-export function getAllSystems(state: IReduxState): string[] {
+export function getAllSystems(state: IReduxState): Option[] {
     const { entities } = state.catalog;
-    const res: string[] = [];
+    const res: Option[] = [];
 
     for (const entity of entities) {
         if (entity.data.kind === Kind.System) {
-            res.push(getID(entity));
+            const id = getID(entity);
+
+            res.push({
+                label: getLabel(entity, id),
+                value: id
+            });
         }
     }
 
@@ -160,13 +181,18 @@ export function getAllSystems(state: IReduxState): string[] {
 
 }
 
-export function getAllComponents(state: IReduxState, except: string): string[] {
+export function getAllComponents(state: IReduxState, except: string): Option[] {
     const { entities } = state.catalog;
-    const res: string[] = [];
+    const res: Option[] = [];
 
     for (const entity of entities) {
         if (entity.data.kind === Kind.Component && entity.id !== except) {
-            res.push(getID(entity));
+            const id = getID(entity);
+
+            res.push({
+                label: getLabel(entity, id),
+                value: id
+            });
         }
     }
 
@@ -175,67 +201,92 @@ export function getAllComponents(state: IReduxState, except: string): string[] {
 }
 
 
-export function getAllAPIs(state: IReduxState): string[] {
+export function getAllAPIs(state: IReduxState): Option[] {
     const { entities } = state.catalog;
-    const res: string[] = [];
+    const res: Option[] = [];
 
     for (const entity of entities) {
         if (entity.data.kind === Kind.API) {
-            res.push(getID(entity));
+            const id = getID(entity);
+
+            res.push({
+                label: getLabel(entity, id),
+                value: id
+            });
         }
     }
 
     return res;
 }
 
-export function getAllPossibleDependencies(state: IReduxState, except: string): string[] {
+export function getAllPossibleDependencies(state: IReduxState, except: string): Option[] {
     const { entities } = state.catalog;
-    const res: string[] = [];
+    const res: Option[] = [];
 
     for (const entity of entities) {
         const kind = entity.data.kind;
 
         if ((kind === Kind.Resource || kind === Kind.Component) && entity.id !== except) {
-            res.push(getIDWithKind(entity));
+            const id = getIDWithKind(entity);
+
+            res.push({
+                label: getLabel(entity, id),
+                value: id
+            });
         }
     }
 
     return res;
 }
 
-export function getAllGroups(state: IReduxState, except: string): string[] {
+export function getAllGroups(state: IReduxState, except: string): Option[] {
     const { entities } = state.catalog;
-    const res: string[] = [];
+    const res: Option[] = [];
 
     for (const entity of entities) {
         if (entity.data.kind === Kind.Group && entity.id !== except) {
-            res.push(getID(entity));
+            const id = getID(entity);
+
+            res.push({
+                label: getLabel(entity, id),
+                value: id
+            });
         }
     }
 
     return res;
 }
 
-export function getAllUsers(state: IReduxState): string[] {
+export function getAllUsers(state: IReduxState): Option[] {
     const { entities } = state.catalog;
-    const res: string[] = [];
+    const res: Option[] = [];
 
     for (const entity of entities) {
         if (entity.data.kind === Kind.User) {
-            res.push(getID(entity));
+            const id = getID(entity);
+
+            res.push({
+                label: getLabel(entity, id),
+                value: id
+            });
         }
     }
 
     return res;
 }
 
-export function getAllDomains(state: IReduxState): string[] {
+export function getAllDomains(state: IReduxState): Option[] {
     const { entities } = state.catalog;
-    const res: string[] = [];
+    const res: Option[] = [];
 
     for (const entity of entities) {
         if (entity.data.kind === Kind.Domain) {
-            res.push(getID(entity));
+            const id = getID(entity);
+
+            res.push({
+                label: getLabel(entity, id),
+                value: id
+            });
         }
     }
 

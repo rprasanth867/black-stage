@@ -45,6 +45,10 @@ const catalogSlice = createSlice({
             const entityId = action.payload.id;
             const idx = state.entities.findIndex((entity: Entity) => entity.id === entityId);
 
+            // name or namespace changed
+
+            // path change
+
             state.entities[idx] = action.payload;
 
             // update relations

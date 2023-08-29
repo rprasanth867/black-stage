@@ -62,18 +62,49 @@
             "system": {
                 "type":"string"
             },
+            "subcomponentOf": {
+                "description":"List of components"
+            },
+            "consumesApis": {
+                "description":"List of Apis"
+            },
+            "profile": {
+                "type":"object",
+                "description":"Profile of user/group",
+                "properties": {
+                    "displayName": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "picture": {
+                        "type": "string"
+                    }
+                }
+            },
             "parent": {
-                "description":"Key value pairs of labels"
+                "description":"parent group id"
             },
             "children": {
-                "description":"Key value pairs of annotations"
+                "description":"List of child groups"
             },
             "members": {
-                "description":"List of tags"
+                "description":"List of users"
             },
             "dependsOn": {
-                "description":"List of tags"
+                "description":"List of components/resources"
+            },
+            "memberOf": {
+                "description":"List of members"
+            },
+            "dependencyOf": {
+                "description":"List of parents"
+            },
+            "domain": {
+                "description":"domain"
             }
+            
         }
     }
   }

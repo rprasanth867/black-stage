@@ -44,43 +44,14 @@ function SpecsForm(props: IProps) {
     const supportedSpecs = getSupportedSpecs(kind);
     const isVisible = (name: string) => supportedSpecs?.includes(name);
 
-    const allOwners = useSelector(getAllOwners).map(owner => {
-        return { value: owner };
-    });
-
-
-    const allSystems = useSelector(getAllSystems).map(sys => {
-        return { value: sys };
-    });
-
-    // add exclude
-    const allComponents = useSelector((state: IReduxState) => getAllComponents(state, entityID)).map(comp => {
-        return { value: comp };
-    });
-
-    // add exclude
-    const allPossibleDependencies = useSelector((state: IReduxState) => getAllPossibleDependencies(state, entityID))
-    .map(comp => {
-        return { value: comp };
-    });
-
-    // add exclude
-    const allGroups = useSelector((state: IReduxState) => getAllGroups(state, entityID)).map(group => {
-        return { value: group };
-    });
-
-    const allUsers = useSelector(getAllUsers).map(user => {
-        return { value: user };
-    });
-
-    const allDomains = useSelector(getAllDomains).map(domain => {
-        return { value: domain };
-    });
-
-
-    const allAPis = useSelector(getAllAPIs).map(api => {
-        return { value: api };
-    });
+    const allOwners = useSelector(getAllOwners);
+    const allSystems = useSelector(getAllSystems);
+    const allComponents = useSelector((state: IReduxState) => getAllComponents(state, entityID));
+    const allPossibleDependencies = useSelector((state: IReduxState) => getAllPossibleDependencies(state, entityID));
+    const allGroups = useSelector((state: IReduxState) => getAllGroups(state, entityID));
+    const allUsers = useSelector(getAllUsers);
+    const allDomains = useSelector(getAllDomains);
+    const allAPis = useSelector(getAllAPIs);
 
     return (
         <Form
