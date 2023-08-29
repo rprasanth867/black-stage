@@ -1,0 +1,80 @@
+{
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "API",
+        "Component",
+        "Domain",
+        "Group",
+        "Location",
+        "Resource",
+        "System",
+        "Template",
+        "User"
+      ]
+    },
+    "metadata": {
+        "type": "object",
+        "properties": {
+            "namespace": {
+                "type":"string"
+            },
+            "name": {
+                "type":"string"
+            },
+            "title": {
+                "type":"string"
+            },
+            "description": {
+                "type":"string"
+            },
+            "labels": {
+                "description":"Key value pairs of labels"
+            },
+            "annotations": {
+                "description":"Key value pairs of annotations"
+            },
+            "tags": {
+                "description":"List of tags"
+            },
+            "links": {
+                "description":"List of tags"
+            }
+        }
+    },
+    "spec": {
+        "type": "object",
+        "properties": {
+            "type": {
+                "type":"string"
+            },
+            "lifecycle": {
+                "type":"string"
+            },
+            "owner": {
+                "type":"string"
+            },
+            "system": {
+                "type":"string"
+            },
+            "parent": {
+                "description":"Key value pairs of labels"
+            },
+            "children": {
+                "description":"Key value pairs of annotations"
+            },
+            "members": {
+                "description":"List of tags"
+            },
+            "dependsOn": {
+                "description":"List of tags"
+            }
+        }
+    }
+  }
+}

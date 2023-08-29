@@ -1,7 +1,6 @@
 import Icon, { CaretRightOutlined } from '@ant-design/icons';
-import { App, Button, Collapse, CollapseProps, Drawer, Form, Input } from 'antd';
+import { Button, Collapse, CollapseProps, Drawer, Form, Input, Modal } from 'antd';
 import { useCallback, useState } from 'react';
-import { FaCode } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import YamlCodeEditor from 'views/code_editor/YamlCodeEditor';
 
@@ -22,8 +21,11 @@ function EditNodeDialog() {
 
     const { editEntity, edit } = useSelector((state: IReduxState) => state.catalog);
     const [ open, setOpen ] = useState(true);
-    const { modal } = App.useApp();
+    const [ modalOpen, setModalOpen ] = useState(false);
+
+    // const [ modal, context ] = useModal();
     const yamlData = editEntity?.data as YAMLData;
+    const [ updatedData, setupdatedData ] = useState<any>(yamlData);
     const dispatch = useDispatch();
 
     const onClose = useCallback(() => {
@@ -76,15 +78,18 @@ function EditNodeDialog() {
     const deleteNode = () => {
         dispatch(deleteEntity(yamlData.id));
     };
+    const saveCode = () => {
+        if (editEntity) {
+            const newEntity = { ...editEntity };
 
-    const openCodeEditor = () => {
-        modal.confirm({
-            icon: <Icon component = { FaCode } />,
-            title: 'Editor',
-            width: '80%',
-            style: { height: '50vh' },
-            content: <YamlCodeEditor yamlData = { yamlData } />
-        });
+            newEntity.data = updatedData;
+            dispatch(updateEntity(newEntity));
+        }
+        setModalOpen(false);
+    };
+
+    const updateDataCallback = (data: any) => {
+        setupdatedData(data);
     };
 
     return (
@@ -93,6 +98,23 @@ function EditNodeDialog() {
             open = { edit && open }
             placement = 'right'
             title = { `Edit ${yamlData?.kind}` }>
+            <Modal
+                closeIcon = { <></> }
+                onCancel = { () => setModalOpen(false) }
+                onOk = { saveCode }
+                open = { modalOpen }
+                style = {{ height: '50vh' }}
+                title = { <div
+                    style = {{ display: 'flex',
+                        flexDirection: 'row' }}>
+                    <Icon />
+                    <span>Editor</span>
+                </div> }
+                width = '80%'>
+                <YamlCodeEditor
+                    saveData = { updateDataCallback }
+                    yamlData = { yamlData } />
+            </Modal>
             <Form
                 initialValues = {{ ...yamlData,
                     path: yamlData.path.replace('.yaml', '') }}
@@ -131,7 +153,7 @@ function EditNodeDialog() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         borderTop: '2px #F1F1F1 solid' }}>
-                    <Button onClick = { openCodeEditor }>Code</Button>
+                    <Button onClick = { () => setModalOpen(true) }>Code</Button>
                     <Button onClick = { deleteNode }>Delete</Button>
                     <Button
                         htmlType = 'submit'

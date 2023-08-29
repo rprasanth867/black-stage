@@ -409,8 +409,6 @@ export function getUpdatedEntites(relation: RelationType, src: EntityType, tar: 
     const source: EntityType = JSON.parse(JSON.stringify(src));
     const target: EntityType = JSON.parse(JSON.stringify(tar));
 
-    console.log('VRRRR kjbh', source, target);
-
     // target.data.spec = {};
 
     const value = relation.label;

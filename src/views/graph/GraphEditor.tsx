@@ -166,14 +166,12 @@ function GraphEditor() {
 
     const onEdgesChange = useCallback(
     (changes: any) => {
-        console.log('vrrrr onedge changes', changes);
         dispatch(setRelations(applyEdgeChanges(changes, allRelations)));
     }, [ allRelations ]
     );
 
     const onConnect = useCallback(
     (connection: Connection) => {
-        console.log('vrrrr onConnect', connection);
         const { relations: rel, source: oldSource, target: oldTarget }
         = getPossibleRelations(window.APP.store.getState(), connection.source ?? '',
             connection.target ?? '');
@@ -186,13 +184,10 @@ function GraphEditor() {
         if (rel.length > 0 && oldSource && oldTarget) {
             const { source: newSource, target: newTarget } = getUpdatedEntites(edge, oldSource, oldTarget);
 
-            console.log(newSource, newTarget);
-
             dispatch(updateEntity(newSource));
             dispatch(updateEntity(newTarget));
         }
 
-        console.log('VRRR new rel', rel);
 
         dispatch(setRelations(addEdge(edge, allRelations)));
     }, [ allRelations ]
