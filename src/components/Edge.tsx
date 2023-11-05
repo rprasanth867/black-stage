@@ -1,8 +1,9 @@
 import { Select } from 'antd';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { BaseEdge, EdgeLabelRenderer, EdgeProps, getBezierPath } from 'reactflow';
+import { updateEntity } from 'redux/reducers/catalog';
 import { IReduxState } from 'redux/store';
-import { getPossibleRelations } from 'utils/graph_util';
+import { getPossibleRelations, getUpdatedEntites } from 'utils/graph_util';
 
 type IEdge = EdgeProps;
 function Edge(props: IEdge) {
@@ -27,17 +28,34 @@ function Edge(props: IEdge) {
         targetY,
         targetPosition
     });
-
-    const handleChange = (value: string) => {
-        console.log(`selected ${value}`);
-    };
+    const dispatch = useDispatch();
 
 
-    const { relations: ops } = useSelector((state: IReduxState) => getPossibleRelations(state, source, target));
+    const { relations: ops,
+        source: sourceEntity,
+        target: targetEntity } = useSelector((state: IReduxState) => getPossibleRelations(state, source, target));
     const options = ops.map(op => {
         return { value: op,
             label: op };
     });
+
+    const handleChange = (value: string) => {
+        console.log(`selected ${value}`);
+
+        const newEdge = {
+            ...props,
+            label: value
+        };
+
+        if (sourceEntity && targetEntity) {
+            const { source: newSource, target: newTarget } = getUpdatedEntites(newEdge, sourceEntity, targetEntity);
+
+            dispatch(updateEntity(newSource));
+            dispatch(updateEntity(newTarget));
+
+        }
+
+    };
 
     return (
         <>

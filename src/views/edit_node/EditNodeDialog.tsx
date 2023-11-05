@@ -1,6 +1,8 @@
 import Icon, { CaretRightOutlined } from '@ant-design/icons';
 import { Button, Collapse, CollapseProps, Drawer, Form, Input, Modal } from 'antd';
 import { useCallback, useState } from 'react';
+import { FaCode, FaSave } from 'react-icons/fa';
+import { MdDelete } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import YamlCodeEditor from 'views/code_editor/YamlCodeEditor';
 
@@ -153,10 +155,16 @@ function EditNodeDialog() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         borderTop: '2px #F1F1F1 solid' }}>
-                    <Button onClick = { () => setModalOpen(true) }>Code</Button>
-                    <Button onClick = { deleteNode }>Delete</Button>
+                    <Button
+                        icon = { <Icon component = { FaCode } /> }
+                        onClick = { () => setModalOpen(true) }>Code</Button>
+                    <Button
+                        danger = { true }
+                        icon = { <Icon component = { MdDelete } /> }
+                        onClick = { deleteNode }>Delete</Button>
                     <Button
                         htmlType = 'submit'
+                        icon = { <Icon component = { FaSave } /> }
                         type = 'primary'>Save</Button>
                 </div>
             </Form>
